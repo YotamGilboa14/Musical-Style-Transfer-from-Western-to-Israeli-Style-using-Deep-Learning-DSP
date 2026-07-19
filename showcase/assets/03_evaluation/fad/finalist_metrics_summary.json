@@ -1,0 +1,199 @@
+{
+  "embedder": "VGGish (pre-trained, torch.hub)",
+  "pretrained": true,
+  "sr": 22050,
+  "configs": {
+    "Artists_ddim100": {
+      "run": "Israeli_Artists_step_search_20260607",
+      "style": "Israeli_Artists",
+      "ddim": 100,
+      "pooled_fad": 2.2214986191268205,
+      "steps": {
+        "224000": {
+          "fad": 2.2032250905432167,
+          "cosine_sim": 0.8900454044342041,
+          "mean_f1": 0.03540066666666667,
+          "per_song_f1": {
+            "oof_gozal": 0.037543,
+            "mechakim_lamashiach": 0.048937,
+            "eich_ze_shekochav": 0.019722
+          },
+          "n_gen_files": 3,
+          "pca_png": "fad_pca/Artists_ddim100__step_224000.png",
+          "bells_png": "fad_bells/Artists_ddim100__step_224000.png"
+        },
+        "212000": {
+          "fad": 2.7151701368756083,
+          "cosine_sim": 0.8606438040733337,
+          "mean_f1": 0.03121,
+          "per_song_f1": {
+            "oof_gozal": 0.038409,
+            "mechakim_lamashiach": 0.038663,
+            "eich_ze_shekochav": 0.016558
+          },
+          "n_gen_files": 3,
+          "pca_png": "fad_pca/Artists_ddim100__step_212000.png",
+          "bells_png": "fad_bells/Artists_ddim100__step_212000.png"
+        },
+        "238000": {
+          "fad": 3.059855429199776,
+          "cosine_sim": 0.8515065908432007,
+          "mean_f1": 0.03093733333333333,
+          "per_song_f1": {
+            "oof_gozal": 0.021785,
+            "mechakim_lamashiach": 0.044,
+            "eich_ze_shekochav": 0.027027
+          },
+          "n_gen_files": 3,
+          "pca_png": "fad_pca/Artists_ddim100__step_238000.png",
+          "bells_png": "fad_bells/Artists_ddim100__step_238000.png"
+        }
+      }
+    },
+    "Military_ddim100": {
+      "run": "Israeli_Military_step_search_20260607",
+      "style": "Israeli_Military",
+      "ddim": 100,
+      "pooled_fad": 2.2005462199210015,
+      "steps": {
+        "242000": {
+          "fad": 2.882604092448764,
+          "cosine_sim": 0.8565186262130737,
+          "mean_f1": 0.045044,
+          "per_song_f1": {
+            "givat_hatchmoshet": 0.013254,
+            "hareut": 0.076834
+          },
+          "n_gen_files": 2,
+          "pca_png": "fad_pca/Military_ddim100__step_242000.png",
+          "bells_png": "fad_bells/Military_ddim100__step_242000.png"
+        },
+        "238000": {
+          "fad": 2.4256453840595533,
+          "cosine_sim": 0.8720724582672119,
+          "mean_f1": 0.0409845,
+          "per_song_f1": {
+            "givat_hatchmoshet": 0.020768,
+            "hareut": 0.061201
+          },
+          "n_gen_files": 2,
+          "pca_png": "fad_pca/Military_ddim100__step_238000.png",
+          "bells_png": "fad_bells/Military_ddim100__step_238000.png"
+        },
+        "248000": {
+          "fad": 2.9820903258235463,
+          "cosine_sim": 0.8569918870925903,
+          "mean_f1": 0.039679000000000006,
+          "per_song_f1": {
+            "givat_hatchmoshet": 0.013937,
+            "hareut": 0.065421
+          },
+          "n_gen_files": 2,
+          "pca_png": "fad_pca/Military_ddim100__step_248000.png",
+          "bells_png": "fad_bells/Military_ddim100__step_248000.png"
+        }
+      }
+    },
+    "Artists_ddim200": {
+      "run": "Israeli_Artists_step_search_20260706_ddim200",
+      "style": "Israeli_Artists",
+      "ddim": 200,
+      "pooled_fad": 2.4917863748643536,
+      "steps": {
+        "242000": {
+          "fad": 2.8467507819919855,
+          "cosine_sim": 0.8580523133277893,
+          "mean_f1": 0.039209,
+          "per_song_f1": {
+            "oof_gozal": 0.045113,
+            "mechakim_lamashiach": 0.053375,
+            "eich_ze_shekochav": 0.019139
+          },
+          "n_gen_files": 3,
+          "pca_png": "fad_pca/Artists_ddim200__step_242000.png",
+          "bells_png": "fad_bells/Artists_ddim200__step_242000.png"
+        },
+        "248000": {
+          "fad": 2.849289632990909,
+          "cosine_sim": 0.8567884564399719,
+          "mean_f1": 0.037482999999999995,
+          "per_song_f1": {
+            "oof_gozal": 0.043776,
+            "mechakim_lamashiach": 0.051016,
+            "eich_ze_shekochav": 0.017657
+          },
+          "n_gen_files": 3,
+          "pca_png": "fad_pca/Artists_ddim200__step_248000.png",
+          "bells_png": "fad_bells/Artists_ddim200__step_248000.png"
+        },
+        "232000": {
+          "fad": 2.3314700502911183,
+          "cosine_sim": 0.8788127303123474,
+          "mean_f1": 0.03673833333333333,
+          "per_song_f1": {
+            "oof_gozal": 0.03739,
+            "mechakim_lamashiach": 0.048859,
+            "eich_ze_shekochav": 0.023966
+          },
+          "n_gen_files": 3,
+          "pca_png": "fad_pca/Artists_ddim200__step_232000.png",
+          "bells_png": "fad_bells/Artists_ddim200__step_232000.png"
+        }
+      }
+    },
+    "Military_ddim200": {
+      "run": "Israeli_Military_step_search_20260706_ddim200",
+      "style": "Israeli_Military",
+      "ddim": 200,
+      "pooled_fad": 2.4183889666242298,
+      "steps": {
+        "238000": {
+          "fad": 3.2622719750765903,
+          "cosine_sim": 0.8397656679153442,
+          "mean_f1": 0.0429595,
+          "per_song_f1": {
+            "givat_hatchmoshet": 0.022464,
+            "hareut": 0.063455
+          },
+          "n_gen_files": 2,
+          "pca_png": "fad_pca/Military_ddim200__step_238000.png",
+          "bells_png": "fad_bells/Military_ddim200__step_238000.png"
+        },
+        "224000": {
+          "fad": 2.864220787118539,
+          "cosine_sim": 0.8579931259155273,
+          "mean_f1": 0.041665,
+          "per_song_f1": {
+            "givat_hatchmoshet": 0.008359,
+            "hareut": 0.074971
+          },
+          "n_gen_files": 2,
+          "pca_png": "fad_pca/Military_ddim200__step_224000.png",
+          "bells_png": "fad_bells/Military_ddim200__step_224000.png"
+        },
+        "232000": {
+          "fad": 2.4697254527630346,
+          "cosine_sim": 0.8714930415153503,
+          "mean_f1": 0.0377885,
+          "per_song_f1": {
+            "givat_hatchmoshet": 0.013185,
+            "hareut": 0.062392
+          },
+          "n_gen_files": 2,
+          "pca_png": "fad_pca/Military_ddim200__step_232000.png",
+          "bells_png": "fad_bells/Military_ddim200__step_232000.png"
+        }
+      }
+    }
+  },
+  "overlays": {
+    "Israeli_Artists": "fad_bells_overlay/overlay__Israeli_Artists.png",
+    "Israeli_Military": "fad_bells_overlay/overlay__Israeli_Military.png"
+  },
+  "f1_heatmaps": {
+    "Israeli_Artists": "f1_heatmap__Israeli_Artists.png",
+    "Israeli_Military": "f1_heatmap__Israeli_Military.png"
+  },
+  "f1_vs_fad_scatter": "f1_vs_fad_scatter.png",
+  "precision_recall_f1": "precision_recall_f1.png"
+}

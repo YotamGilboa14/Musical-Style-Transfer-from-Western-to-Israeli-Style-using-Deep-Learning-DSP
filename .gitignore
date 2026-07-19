@@ -1,0 +1,47 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.ipynb_checkpoints/
+.pytest_cache/
+
+# Virtual environments
+.venv/
+venv/
+env/
+*_env/
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/
+
+# Credentials and tokens — never commit these
+credentials.json
+client_secret*.json
+token*.json
+*.pem
+
+# Large data / model artifacts (kept on Drive, not in the repo)
+*.pt
+*.ckpt
+*.wav
+*.mp3
+*.flac
+slakh_processed/
+versions/
+checkpoints/
+MusicProjectData/
+youtube_downloads/
+midi_output/
+
+# Local build outputs
+_build/
+*.tmp
+
+# ...but DO keep the curated public examples and the hosted showcase, even
+# though they contain audio/tensors that the rules above would otherwise ignore.
+!examples/
+!examples/**
+!showcase/
+!showcase/**

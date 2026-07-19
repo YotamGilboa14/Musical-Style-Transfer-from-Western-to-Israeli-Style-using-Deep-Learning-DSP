@@ -1,0 +1,42 @@
+# PHASE B SMOKE — render ONE clean song (Diamonds) full-length through 2 versions
+# to check the overlap-blend for seams and measure per-song wall-clock BEFORE the
+# full 70-render batch. Latency is captured live (timing_infos.json).
+#
+#   python -m postprocessing.run_inference_batch --run-spec configs/demo/run_spec_demo_SMOKE.yaml
+#
+# Expect: 2 full-length Diamonds WAVs (~4.7 min each) under
+#   versions/Israeli_3style/demo_external/_renders/demo_SMOKE_Diamonds/audio/
+
+run_id: demo_SMOKE_Diamonds
+version_id: 1
+target_style: Israeli_Artists_ddim100
+style_version_id: 1
+
+output_root: /content/drive/MyDrive/MusicProject/versions/Israeli_3style/demo_external/_renders
+checkpoint_template: /content/drive/MyDrive/MusicProject/checkpoints/Israeli_3style/step_{step}.pt
+
+steps: [224000, 238000]
+
+songs:
+  - name: Rihanna_Diamonds
+    midi: "/content/drive/MyDrive/MusicProject/versions/Israeli_3style/demo_external/Rihanna_Diamonds/Diamonds.mid"
+    duration: 283.0
+
+roles: [transferred]
+
+sampling:
+  ddim_steps: 100
+  cfg_score: 1.25
+  cfg_version: 1.25
+  mel_min: -80.0
+  mel_max: 0.0
+
+# Demo songs are qualitative-only: NO FAD/F1 (no real target-style reference).
+# Latency ON — this pass is also the Mission 3c timing benchmark.
+metrics:
+  fad:
+    enable: false
+  f1:
+    enable: false
+  latency:
+    enable: true

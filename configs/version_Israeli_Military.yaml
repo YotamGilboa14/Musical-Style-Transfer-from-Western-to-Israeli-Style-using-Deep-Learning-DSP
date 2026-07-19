@@ -1,0 +1,172 @@
+# version_Israeli_Military.yaml — Version 2 (v2) Israeli military-band (lehakot tzvaiyot) set.
+# SOLE input to `python -m preprocessing.derive_version --spec <this>` (DSP-only, Colab-safe).
+# Basic-Pitch must already have run on the source pool.
+#
+# Drive layout assumed (see ../README.md "Israeli Data Pipeline"):
+#   <drive_root>/SourcePool/<artist>/<album>/<song>/{<song>.wav, <song>.mid, augmented/...}
+#   <drive_root>/versions/Israeli_Military/processed_data/...   ← derive_version writes here
+#
+# Provenance: generated from batch_songs_military.csv (113 unique songs, 18 ensembles),
+# deduplicated by source URL (0 duplicates after CSV cleanup). The actual ingest writes
+# its manifest to SourcePool/source_pool_index_military.csv.
+# RECONCILED 2026-06-05: ingest completed ok=109 skipped=4 failed=0 (113/113). All 113
+# entries verified present in source_pool_index_military.csv with .wav+.mid on Drive and
+# augmented_count==4. No pruning needed — this spec matches the source pool exactly.
+
+version_id: 2
+style_name: Israeli_Military
+
+# DSPConfig overrides — identical to project defaults (interchangeable mel tensors).
+dsp:
+  sample_rate: 22050
+  hop_length: 256
+  n_fft: 1024
+  n_mels: 80
+  fmax: 8000
+  segment_duration: 5.0   # → 430 mel frames per segment
+
+# Offline augmentation policy. Tags emitted by
+# `preprocessing.augmentation.DEFAULT_AUGMENTATIONS`
+# (pitch_shift_+2, pitch_shift_-2, time_stretch_0.9, time_stretch_1.1).
+augmentation_policy: default
+
+# Held-out songs (D-set) — EXCLUDED from training in `preprocessing.split_dataset`.
+# Names below match the `song_name` field of entries in `songs:` exactly.
+held_out_songs:
+  - hareut
+  - givat hatchmoshet
+
+# ---- Songs to pull from SourcePool/ into this version ------------------------
+# Each entry resolves to SourcePool/<artist>/<album>/<song_name>/
+songs:
+  # ---- Lehakat Pikud Tzafon (12) ----
+  - { artist: Lehakat Pikud Tzafon, album: Single, song_name: malchut hachermon, include_augmented: true }
+  - { artist: Lehakat Pikud Tzafon, album: Single, song_name: beglal masmer, include_augmented: true }
+  - { artist: Lehakat Pikud Tzafon, album: Single, song_name: vechaver ein beyad david, include_augmented: true }
+  - { artist: Lehakat Pikud Tzafon, album: Single, song_name: yael, include_augmented: true }
+  - { artist: Lehakat Pikud Tzafon, album: Single, song_name: kad hakemach, include_augmented: true }
+  - { artist: Lehakat Pikud Tzafon, album: Single, song_name: kochav hatzafon, include_augmented: true }
+  - { artist: Lehakat Pikud Tzafon, album: Single, song_name: latzafon beahava, include_augmented: true }
+  - { artist: Lehakat Pikud Tzafon, album: Single, song_name: matok matok, include_augmented: true }
+  - { artist: Lehakat Pikud Tzafon, album: Single, song_name: ner bachalonech, include_augmented: true }
+  - { artist: Lehakat Pikud Tzafon, album: Single, song_name: od lo tamu kol plaaich, include_augmented: true }
+  - { artist: Lehakat Pikud Tzafon, album: Single, song_name: kum vehithalech baaretz, include_augmented: true }
+  - { artist: Lehakat Pikud Tzafon, album: Single, song_name: tamid otam, include_augmented: true }
+  # ---- Lehakat Pikud Merkaz (15) ----
+  - { artist: Lehakat Pikud Merkaz, album: Single, song_name: givat hatchmoshet, include_augmented: true }   # HELD OUT
+  - { artist: Lehakat Pikud Merkaz, album: Single, song_name: yesh li ahuv besayeret charuv, include_augmented: true }
+  - { artist: Lehakat Pikud Merkaz, album: Single, song_name: shiro shel tzanchan, include_augmented: true }
+  - { artist: Lehakat Pikud Merkaz, album: Single, song_name: anachnu meoto hakfar, include_augmented: true }
+  - { artist: Lehakat Pikud Merkaz, album: Single, song_name: et eineich si mizracha, include_augmented: true }
+  - { artist: Lehakat Pikud Merkaz, album: Single, song_name: hayamim haacherim, include_augmented: true }
+  - { artist: Lehakat Pikud Merkaz, album: Single, song_name: ben gurion, include_augmented: true }
+  - { artist: Lehakat Pikud Merkaz, album: Single, song_name: yivn uziyahu, include_augmented: true }
+  - { artist: Lehakat Pikud Merkaz, album: Single, song_name: chayalim yatzu laderech, include_augmented: true }
+  - { artist: Lehakat Pikud Merkaz, album: Single, song_name: ya lil, include_augmented: true }
+  - { artist: Lehakat Pikud Merkaz, album: Single, song_name: kineret, include_augmented: true }
+  - { artist: Lehakat Pikud Merkaz, album: Single, song_name: michtav katan, include_augmented: true }
+  - { artist: Lehakat Pikud Merkaz, album: Single, song_name: makpelot hamatznachim, include_augmented: true }
+  - { artist: Lehakat Pikud Merkaz, album: Single, song_name: nagan akordeon, include_augmented: true }
+  - { artist: Lehakat Pikud Merkaz, album: Single, song_name: shomer hachomot, include_augmented: true }
+  # ---- Lehakat Heyl Hayam (10) ----
+  - { artist: Lehakat Heyl Hayam, album: Single, song_name: rak beisrael, include_augmented: true }
+  - { artist: Lehakat Heyl Hayam, album: Single, song_name: bo layam, include_augmented: true }
+  - { artist: Lehakat Heyl Hayam, album: Single, song_name: chaskah, include_augmented: true }
+  - { artist: Lehakat Heyl Hayam, album: Single, song_name: hamelach sheli, include_augmented: true }
+  - { artist: Lehakat Heyl Hayam, album: Single, song_name: kshehu gadol, include_augmented: true }
+  - { artist: Lehakat Heyl Hayam, album: Single, song_name: anshei hadmama, include_augmented: true }
+  - { artist: Lehakat Heyl Hayam, album: Single, song_name: ein kvar derech chazara, include_augmented: true }
+  - { artist: Lehakat Heyl Hayam, album: Single, song_name: yiddishe piraten, include_augmented: true }
+  - { artist: Lehakat Heyl Hayam, album: Single, song_name: ma avarech, include_augmented: true }
+  - { artist: Lehakat Heyl Hayam, album: Single, song_name: al em haderech, include_augmented: true }
+  # ---- Lehakat HaNachal (42) ----
+  - { artist: Lehakat HaNachal, album: Single, song_name: yeshnan banot, include_augmented: true }
+  - { artist: Lehakat HaNachal, album: Single, song_name: machar, include_augmented: true }
+  - { artist: Lehakat HaNachal, album: Single, song_name: beheachazut hanachal besinai, include_augmented: true }
+  - { artist: Lehakat HaNachal, album: Single, song_name: hayiti naar, include_augmented: true }
+  - { artist: Lehakat HaNachal, album: Single, song_name: mul har sinai, include_augmented: true }
+  - { artist: Lehakat HaNachal, album: Single, song_name: dina barzilay, include_augmented: true }
+  - { artist: Lehakat HaNachal, album: Single, song_name: ruach stav, include_augmented: true }
+  - { artist: Lehakat HaNachal, album: Single, song_name: eilu tziporim, include_augmented: true }
+  - { artist: Lehakat HaNachal, album: Single, song_name: matariah bashnayim, include_augmented: true }
+  - { artist: Lehakat HaNachal, album: Single, song_name: tel aviv eina mud'eget, include_augmented: true }
+  - { artist: Lehakat HaNachal, album: Single, song_name: hapruta vehayareach, include_augmented: true }
+  - { artist: Lehakat HaNachal, album: Single, song_name: shteim asar ton, include_augmented: true }
+  - { artist: Lehakat HaNachal, album: Single, song_name: echad gavoha ushnaim ktanim, include_augmented: true }
+  - { artist: Lehakat HaNachal, album: Single, song_name: el hanachal, include_augmented: true }
+  - { artist: Lehakat HaNachal, album: Single, song_name: arba achar hatzohorayim, include_augmented: true }
+  - { artist: Lehakat HaNachal, album: Single, song_name: Shir Lashalom, include_augmented: true }
+  - { artist: Lehakat HaNachal, album: Single, song_name: beharim kaseh, include_augmented: true }
+  - { artist: Lehakat HaNachal, album: Single, song_name: balada leyitzchak sadeh, include_augmented: true }
+  - { artist: Lehakat HaNachal, album: Single, song_name: balada al mayan veyam, include_augmented: true }
+  - { artist: Lehakat HaNachal, album: Single, song_name: besimla aduma, include_augmented: true }
+  - { artist: Lehakat HaNachal, album: Single, song_name: gvanim, include_augmented: true }
+  - { artist: Lehakat HaNachal, album: Single, song_name: geshem bo, include_augmented: true }
+  - { artist: Lehakat HaNachal, album: Single, song_name: hu lo yada et shma, include_augmented: true }
+  - { artist: Lehakat HaNachal, album: Single, song_name: hu lo kol kach chacham, include_augmented: true }
+  - { artist: Lehakat HaNachal, album: Single, song_name: hora haheachazut, include_augmented: true }
+  - { artist: Lehakat HaNachal, album: Single, song_name: hachayim hayafim, include_augmented: true }
+  - { artist: Lehakat HaNachal, album: Single, song_name: hareut, include_augmented: true }   # HELD OUT
+  - { artist: Lehakat HaNachal, album: Single, song_name: hitchadshut acheret, include_augmented: true }
+  - { artist: Lehakat HaNachal, album: Single, song_name: vals lehaganat hatzomeach, include_augmented: true }
+  - { artist: Lehakat HaNachal, album: Single, song_name: chofsha beadom, include_augmented: true }
+  - { artist: Lehakat HaNachal, album: Single, song_name: ya yareach, include_augmented: true }
+  - { artist: Lehakat HaNachal, album: Single, song_name: ya mishlati, include_augmented: true }
+  - { artist: Lehakat HaNachal, album: Single, song_name: leechad hachayalim, include_augmented: true }
+  - { artist: Lehakat HaNachal, album: Single, song_name: machboim, include_augmented: true }
+  - { artist: Lehakat HaNachal, album: Single, song_name: neum tshuva lerav chovel italki, include_augmented: true }
+  - { artist: Lehakat HaNachal, album: Single, song_name: sayarim, include_augmented: true }
+  - { artist: Lehakat HaNachal, album: Single, song_name: carnaval banachal, include_augmented: true }
+  - { artist: Lehakat HaNachal, album: Single, song_name: rachel rachel, include_augmented: true }
+  - { artist: Lehakat HaNachal, album: Single, song_name: shir haslang, include_augmented: true }
+  - { artist: Lehakat HaNachal, album: Single, song_name: sarit hasaparit, include_augmented: true }
+  - { artist: Lehakat HaNachal, album: Single, song_name: totachim bimkom garbayim, include_augmented: true }
+  - { artist: Lehakat HaNachal, album: Single, song_name: haben yakir li, include_augmented: true }
+  # ---- Lehakat Heil Ha'avir (1) ----
+  - { artist: Lehakat Heil Ha'avir, album: Single, song_name: tamid ola hamenagina, include_augmented: true }
+  # ---- The Israeli Air Force Quartet (1) ----
+  - { artist: The Israeli Air Force Quartet, album: Single, song_name: im telech achshav, include_augmented: true }
+  # ---- Lehakat Pikud Darom (10) ----
+  - { artist: Lehakat Pikud Darom, album: Single, song_name: ani met, include_augmented: true }
+  - { artist: Lehakat Pikud Darom, album: Single, song_name: hamnon givati, include_augmented: true }
+  - { artist: Lehakat Pikud Darom, album: Single, song_name: yona im ale shel zayit, include_augmented: true }
+  - { artist: Lehakat Pikud Darom, album: Single, song_name: alumim, include_augmented: true }
+  - { artist: Lehakat Pikud Darom, album: Single, song_name: elad yarad el hayarden, include_augmented: true }
+  - { artist: Lehakat Pikud Darom, album: Single, song_name: eilat, include_augmented: true }
+  - { artist: Lehakat Pikud Darom, album: Single, song_name: eretz yisrael yafa, include_augmented: true }
+  - { artist: Lehakat Pikud Darom, album: Single, song_name: besayeret sheket, include_augmented: true }
+  - { artist: Lehakat Pikud Darom, album: Single, song_name: lehitraot, include_augmented: true }
+  - { artist: Lehakat Pikud Darom, album: Single, song_name: shivchei maoz, include_augmented: true }
+  # ---- Pikud Merkaz Trio (1) ----
+  - { artist: Pikud Merkaz Trio, album: Single, song_name: hayom hayom, include_augmented: true }
+  # ---- Lehakat Geyisot Hashiryon (6) ----
+  - { artist: Lehakat Geyisot Hashiryon, album: Single, song_name: pshut shiryoner, include_augmented: true }
+  - { artist: Lehakat Geyisot Hashiryon, album: Single, song_name: achi hatzair yehuda, include_augmented: true }
+  - { artist: Lehakat Geyisot Hashiryon, album: Single, song_name: elifelet, include_augmented: true }
+  - { artist: Lehakat Geyisot Hashiryon, album: Single, song_name: haem hashlishit, include_augmented: true }
+  - { artist: Lehakat Geyisot Hashiryon, album: Single, song_name: layla rishon bli ima, include_augmented: true }
+  - { artist: Lehakat Geyisot Hashiryon, album: Single, song_name: ikvot haderech, include_augmented: true }
+  # ---- Tzevet Havai HaNachal (4) ----
+  - { artist: Tzevet Havai HaNachal, album: Single, song_name: baaviv at tashuvi chazara, include_augmented: true }
+  - { artist: Tzevet Havai HaNachal, album: Single, song_name: malach misulam yaakov, include_augmented: true }
+  - { artist: Tzevet Havai HaNachal, album: Single, song_name: zemer shekaze, include_augmented: true }
+  - { artist: Tzevet Havai HaNachal, album: Single, song_name: chofim, include_augmented: true }
+  # ---- Havurat Hazemer Shel Pikud Tzafon (3) ----
+  - { artist: Havurat Hazemer Shel Pikud Tzafon, album: Single, song_name: boi iti el hagalil, include_augmented: true }
+  - { artist: Havurat Hazemer Shel Pikud Tzafon, album: Single, song_name: balayla al hadeshe, include_augmented: true }
+  - { artist: Havurat Hazemer Shel Pikud Tzafon, album: Single, song_name: geshem acharon, include_augmented: true }
+  # ---- Tzevet Havai Chativat Hatzanchanim (1) ----
+  - { artist: Tzevet Havai Chativat Hatzanchanim, album: Single, song_name: mesaviv lamedura, include_augmented: true }
+  # ---- Tzevet Havai Pikud Merkaz (1) ----
+  - { artist: Tzevet Havai Pikud Merkaz, album: Single, song_name: ei sham babikaa, include_augmented: true }
+  # ---- Tzevet Havai Totchanim (1) ----
+  - { artist: Tzevet Havai Totchanim, album: Single, song_name: beleilot hakayitz hachamim, include_augmented: true }
+  # ---- Tzevet Havai Cheil Avir (1) ----
+  - { artist: Tzevet Havai Cheil Avir, album: Single, song_name: betocha, include_augmented: true }
+  # ---- Lehakat Heyl Ha'avir (2) ----
+  - { artist: Lehakat Heyl Ha'avir, album: Single, song_name: muchrachim lehamshich lenagen, include_augmented: true }
+  - { artist: Lehakat Heyl Ha'avir, album: Single, song_name: haya li chaver haya li ach, include_augmented: true }
+  # ---- Tzevet Havai Handasa Kravit (1) ----
+  - { artist: Tzevet Havai Handasa Kravit, album: Single, song_name: tzochek mi shetzochek acharon, include_augmented: true }
+  # ---- Lehakat Chinuch Meyuchad (1) ----
+  - { artist: Lehakat Chinuch Meyuchad, album: Single, song_name: chutz 73, include_augmented: true }

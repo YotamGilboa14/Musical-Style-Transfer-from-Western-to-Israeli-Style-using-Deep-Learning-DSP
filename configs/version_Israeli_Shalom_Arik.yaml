@@ -1,0 +1,78 @@
+# TEMPLATE — fill the `songs:` list after Phase D1 ingest finishes.
+# This file is the SOLE input to `python -m preprocessing.derive_version --spec <this>`
+# (DSP-only, Colab-safe). Basic-Pitch must already have run on the source pool.
+#
+# Drive layout assumed (see ../README.md "Israeli Data Pipeline"):
+#   <drive_root>/source_pool/<artist>/<album>/<song>/{<song>.wav, <song>.mid, augmented/...}
+#   <drive_root>/versions/Israeli_Shalom_Arik/processed_data/...   ← derive_version writes here
+
+version_id: 1
+style_name: Israeli
+
+# DSPConfig overrides — kept identical to the project defaults so Israeli vs.
+# Slakh-sanity mel tensors are interchangeable for the diffusion UNet.
+dsp:
+  sample_rate: 22050
+  hop_length: 256
+  n_fft: 1024
+  n_mels: 80
+  fmax: 8000
+  segment_duration: 5.0   # → 430 mel frames per segment
+
+# Offline augmentation policy. The strings below are the augmentation tags
+# emitted by `preprocessing.augmentation.DEFAULT_AUGMENTATIONS`
+# (pitch_shift_+2, pitch_shift_-2, time_stretch_0.9, time_stretch_1.1).
+# Set `include_augmented: false` on a song to skip its augmented variants.
+augmentation_policy: default
+
+# Held-out songs (D-set) — these names must also appear in `run_spec.yaml`
+# under `songs:` and be EXCLUDED from training in `preprocessing.split_dataset`.
+# Names below match the `song_name` field of entries in `songs:` exactly.
+held_out_songs:
+  - hachnisini tachat knafech
+  - oof gozal
+  - mechakim lamashiach
+  - layla
+
+# ---- Songs to pull from source_pool/ into this version -----------------------
+# Each entry resolves to source_pool/<artist>/<album>/<song_name>/
+# Subset: Arik Einstein (18) + Shalom Hanoch (15) = 33 songs from
+# MusicProjectData/source_pool_index.csv rows 2-35.
+# ("uf gozal" dropped — duplicate ingest of held-out "oof gozal", same URL.)
+# 4 of these are held out (see `held_out_songs` above) → 29 train, 4 held.
+songs:
+  # ---- Arik Einstein (18) ----
+  - { artist: Arik Einstein, album: Shablul,                          song_name: lama li lakachat lalev,           include_augmented: true }
+  - { artist: Arik Einstein, album: Sa Leat,                          song_name: sa leat,                          include_augmented: true }
+  - { artist: Arik Einstein, album: Shablul,                          song_name: ani roeh ota baderech lagimnasia, include_augmented: true }
+  - { artist: Arik Einstein, album: Shablul,                          song_name: avshalom,                         include_augmented: true }
+  - { artist: Arik Einstein, album: Shablul,                          song_name: ma ata ose ksheata kam baboker,   include_augmented: true }
+  - { artist: Arik Einstein, album: Badeshe Etsel Avigdor,            song_name: ani veata,                        include_augmented: true }
+  - { artist: Arik Einstein, album: Single,                           song_name: yom yom,                          include_augmented: true }
+  - { artist: Arik Einstein, album: Hashanim HaRishonot,              song_name: hachnisini tachat knafech,        include_augmented: true }   # HELD OUT
+  - { artist: Arik Einstein, album: Single,                           song_name: yesh li simpatia,                 include_augmented: true }
+  - { artist: Arik Einstein, album: Single,                           song_name: tzel etz tamar,                   include_augmented: true }
+  - { artist: Arik Einstein, album: Single,                           song_name: tapuchim utmarim,                 include_augmented: true }
+  - { artist: Arik Einstein, album: Eretz Yisrael Hayeshana Vehatova, song_name: atzur mitzchech,                  include_augmented: true }
+  - { artist: Arik Einstein, album: Al Gvul Haor,                     song_name: oof gozal,                        include_augmented: true }   # HELD OUT
+  - { artist: Arik Einstein, album: Single,                           song_name: shemesh retuva,                   include_augmented: true }
+  - { artist: Arik Einstein, album: Single,                           song_name: praha,                            include_augmented: true }
+  - { artist: Arik Einstein, album: Yesh Bi Ahava,                    song_name: yesh bi ahava,                    include_augmented: true }
+  - { artist: Arik Einstein, album: Al Gvul Haor,                     song_name: shir hashayara,                   include_augmented: true }
+  - { artist: Arik Einstein, album: Single,                           song_name: ani ohev otach hayom,             include_augmented: true }
+  # ---- Shalom Hanoch (15) ----
+  - { artist: Shalom Hanoch, album: Adam Betoch Atzmo,                song_name: adam betoch atzmo,                include_augmented: true }
+  - { artist: Shalom Hanoch, album: Single,                           song_name: leat leat,                        include_augmented: true }
+  - { artist: Shalom Hanoch, album: Lo At Lo,                         song_name: lo at lo,                         include_augmented: true }
+  - { artist: Shalom Hanoch, album: Single,                           song_name: ahavat neorai,                    include_augmented: true }
+  - { artist: Shalom Hanoch, album: Single,                           song_name: deja vu,                          include_augmented: true }
+  - { artist: Shalom Hanoch, album: Single,                           song_name: tzemach bar,                      include_augmented: true }
+  - { artist: Shalom Hanoch, album: Single,                           song_name: kol echad rotze,                  include_augmented: true }
+  - { artist: Shalom Hanoch, album: Mechakim Lamashiach,              song_name: mechakim lamashiach,              include_augmented: true }   # HELD OUT
+  - { artist: Shalom Hanoch, album: Shalom Hanoch,                    song_name: maya,                             include_augmented: true }
+  - { artist: Shalom Hanoch, album: Shalom Hanoch,                    song_name: layla,                            include_augmented: true }   # HELD OUT
+  - { artist: Shalom Hanoch, album: Single,                           song_name: ani achshav,                      include_augmented: true }
+  - { artist: Shalom Hanoch, album: Single,                           song_name: shir derech,                      include_augmented: true }
+  - { artist: Shalom Hanoch, album: Single,                           song_name: kacha ve kach,                    include_augmented: true }
+  - { artist: Shalom Hanoch, album: Sof Onat Hatapuzim,               song_name: sof onat hatapuzim,               include_augmented: true }
+  - { artist: Shalom Hanoch, album: Single,                           song_name: shirim pshutim,                   include_augmented: true }

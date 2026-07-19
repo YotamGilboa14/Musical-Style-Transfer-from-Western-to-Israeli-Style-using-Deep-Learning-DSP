@@ -1,0 +1,47 @@
+# DEMO RENDER — Slakh v0 baseline (architecture proof), ddim=200. Single step 248000.
+# 5 songs x 1 step = 5 whole-song renders. Latency captured live.
+#   python -m postprocessing.run_inference_batch --run-spec configs/demo/run_spec_demo_Slakh_ddim200.yaml
+
+run_id: demo_Slakh_v0_ddim200
+version_id: 0
+target_style: Slakh_v0_ddim200
+style_version_id: 0
+
+output_root: /content/drive/MyDrive/MusicProject/versions/Israeli_3style/demo_external/_renders
+checkpoint_template: /content/drive/MyDrive/MusicProject/checkpoints/Israeli_3style/step_{step}.pt
+
+steps: [248000]
+
+songs:
+  - name: Rihanna_Diamonds
+    midi: "/content/drive/MyDrive/MusicProject/versions/Israeli_3style/demo_external/Rihanna_Diamonds/Diamonds.mid"
+    duration: 283.0
+  - name: Eminem_Lose_Yourself
+    midi: "/content/drive/MyDrive/MusicProject/versions/Israeli_3style/demo_external/Eminem_Lose_Yourself/Lose_Yourself.mid"
+    duration: 328.0
+  - name: Metallica_Enter_Sandman
+    midi: "/content/drive/MyDrive/MusicProject/versions/Israeli_3style/demo_external/Metallica_Enter_Sandman/Enter_Sandman.mid"
+    duration: 331.0
+  - name: Noa_Kirel_Unicorn
+    midi: "/content/drive/MyDrive/MusicProject/versions/Israeli_3style/demo_external/Noa_Kirel_Unicorn/Unicorn.mid"
+    duration: 193.0
+  - name: Ravid_Plotnik_New_Day
+    midi: "/content/drive/MyDrive/MusicProject/versions/Israeli_3style/demo_external/Ravid_Plotnik_New_Day/New_Day.mid"
+    duration: 209.0
+
+roles: [transferred]
+
+sampling:
+  ddim_steps: 200
+  cfg_score: 1.25
+  cfg_version: 1.25
+  mel_min: -80.0
+  mel_max: 0.0
+
+metrics:
+  fad:
+    enable: false
+  f1:
+    enable: false
+  latency:
+    enable: true

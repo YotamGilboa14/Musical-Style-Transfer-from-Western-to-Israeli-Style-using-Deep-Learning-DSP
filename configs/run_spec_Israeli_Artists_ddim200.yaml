@@ -1,0 +1,50 @@
+# A/B variant of run_spec_Israeli_Artists.yaml — identical EXCEPT ddim_steps=200.
+# Purpose: no-retrain quality lever (more DDIM iterations => sharper generated mel).
+# Present alongside the ddim=100 baseline. See ENGINEERING_DECISIONS.md §38.2.
+#   python -m postprocessing.run_inference_batch --run-spec configs/run_spec_Israeli_Artists_ddim200.yaml
+#
+# NOTE: paths are Colab-side (/content/drive/...), because run_inference_batch
+# runs on Colab. The later local F1 pass takes --run-dir directly (G:\ path).
+
+run_id: Israeli_Artists_step_search_20260706_ddim200
+version_id: 1
+target_style: Israeli_Artists
+style_version_id: 1                 # version embedding channel to condition on
+
+output_root: /content/drive/MyDrive/MusicProject/versions/Israeli_3style/inference_runs
+checkpoint_template: /content/drive/MyDrive/MusicProject/checkpoints/Israeli_3style/step_{step}.pt
+
+# The 11 winner checkpoints chosen by ear in the Cell-7c / 7d listening tests.
+steps: [190000, 202000, 204000, 212000, 220000, 224000, 232000, 234000, 238000, 242000, 248000]
+
+# Held-out songs only (excluded from training; from versions/Israeli_Artists/held_out.csv).
+songs:
+  - name: oof_gozal
+    midi: "/content/drive/MyDrive/MusicProject/SourcePool/Arik Einstein/Al Gvul Haor/oof gozal/oof gozal.mid"
+    duration: 30.0
+  - name: mechakim_lamashiach
+    midi: "/content/drive/MyDrive/MusicProject/SourcePool/Shalom Hanoch/Mechakim Lamashiach/mechakim lamashiach/mechakim lamashiach.mid"
+    duration: 30.0
+  - name: eich_ze_shekochav
+    midi: "/content/drive/MyDrive/MusicProject/SourcePool/Matti Caspi/Matti Caspi/eich ze shekochav/eich ze shekochav.mid"
+    duration: 30.0
+
+roles: [transferred]
+
+# ddim_steps=200 is the ONLY change vs the baseline spec (cfg fixed at 1.25).
+sampling:
+  ddim_steps: 200
+  cfg_score: 1.25
+  cfg_version: 1.25
+  mel_min: -80.0
+  mel_max: 0.0
+
+metrics:
+  f1:
+    enable: true                 # local-only: needs basic_pitch_env (Windows)
+    onset_tolerance_s: 0.05
+  fad:
+    enable: true
+    real_dir: /content/drive/MyDrive/MusicProject/versions/Israeli_3style/fad_real/Israeli_Artists
+  latency:
+    enable: true

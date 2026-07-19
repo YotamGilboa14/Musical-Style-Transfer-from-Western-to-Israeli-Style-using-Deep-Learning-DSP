@@ -1,0 +1,129 @@
+# Combined TA-grading deliverables config for the Israeli_3style model.
+#
+# One bundle covers all three style versions (Slakh v0, Israeli Artists v1,
+# Israeli Military v2) and BOTH samplers (ddim100 / ddim200). The result
+# stages REUSE already-built artifacts instead of recomputing:
+#   * 02 FAD  + 03 F1  -> the finalist-metrics run (_finalist_metrics/)
+#   * 04 Latency       -> the demo render timings + latency_by_ddim.png chart
+#   * 05 Transfer grid -> the 70-render demo gallery (_gallery/)
+#
+# Build (from MusicProject/, ml_env has matplotlib/pyyaml):
+#   .\ml_env\Scripts\python.exe .\build_deliverables.py `
+#       --config .\deliverables\config_israeli_3style.yaml `
+#       --out_dir .\deliverables\israeli_3style
+#   then open deliverables/israeli_3style/00_overview/index.html
+
+run_name: Israeli_3style
+style_name: Israeli (Artists v1 + Military v2) + Slakh rock v0
+version_id: 1
+
+# 01 data-quality gate is skipped here (training splits live on Colab, not
+# locally). Add `splits_dir:` pointing at a folder with train/val/test.csv to
+# enable it.
+
+# -------- 01b: preprocessing demo (raw WAV -> mel walkthrough) -------------
+preprocessing:
+  featured_songs:
+    - name: Rihanna_Diamonds
+      wav: G:/My Drive/MusicProject/versions/Israeli_3style/demo_external/Rihanna_Diamonds/original.wav
+      midi: G:/My Drive/MusicProject/versions/Israeli_3style/demo_external/Rihanna_Diamonds/Diamonds.mid
+    - name: Eminem_Lose_Yourself
+      wav: G:/My Drive/MusicProject/versions/Israeli_3style/demo_external/Eminem_Lose_Yourself/original.wav
+      midi: G:/My Drive/MusicProject/versions/Israeli_3style/demo_external/Eminem_Lose_Yourself/Lose_Yourself.mid
+    - name: Metallica_Enter_Sandman
+      wav: G:/My Drive/MusicProject/versions/Israeli_3style/demo_external/Metallica_Enter_Sandman/original.wav
+      midi: G:/My Drive/MusicProject/versions/Israeli_3style/demo_external/Metallica_Enter_Sandman/Enter_Sandman.mid
+    - name: Noa_Kirel_Unicorn
+      wav: G:/My Drive/MusicProject/versions/Israeli_3style/demo_external/Noa_Kirel_Unicorn/original.wav
+      midi: G:/My Drive/MusicProject/versions/Israeli_3style/demo_external/Noa_Kirel_Unicorn/Unicorn.mid
+    - name: Ravid_Plotnik_New_Day
+      wav: G:/My Drive/MusicProject/versions/Israeli_3style/demo_external/Ravid_Plotnik_New_Day/original.wav
+      midi: G:/My Drive/MusicProject/versions/Israeli_3style/demo_external/Ravid_Plotnik_New_Day/New_Day.mid
+
+# -------- 02 FAD: reuse the finalist-metrics figures -----------------------
+fad:
+  reuse:
+    source_dir: G:/My Drive/MusicProject/versions/Israeli_3style/_finalist_metrics
+    source_index: G:/My Drive/MusicProject/versions/Israeli_3style/_finalist_metrics/index.html
+    files:
+      - fad_by_step.png
+      - finalist_metrics_summary.json
+    dirs:
+      - fad_pca
+      - fad_bells
+      - fad_bells_overlay
+    blurb: >-
+      Frechet Audio Distance (pretrained VGGish, 128-dim) over the 12 finalist
+      checkpoints (Artists &amp; Military x ddim100 &amp; ddim200, top-3 steps
+      each), scored on held-out real audio. ddim100 leads on FAD for both
+      styles. Bars are per-step FAD; the PCA and Fisher-bell panels show how
+      generated embeddings sit against the real-style cloud.
+
+# -------- 03 F1: reuse the finalist-metrics figures ------------------------
+f1:
+  reuse:
+    source_dir: G:/My Drive/MusicProject/versions/Israeli_3style/_finalist_metrics
+    source_index: G:/My Drive/MusicProject/versions/Israeli_3style/_finalist_metrics/index.html
+    files:
+      - f1_by_step.png
+      - f1_vs_fad_scatter.png
+      - precision_recall_f1.png
+      - f1_heatmap__Israeli_Artists.png
+      - f1_heatmap__Israeli_Military.png
+    dirs:
+      - f1_pianoroll
+    blurb: >-
+      Note-level F1 (Basic-Pitch transcription, greedy pitch+onset match at
+      +/-50 ms) across the same 12 finalists. Absolute F1 is low by design
+      (polyphonic full-mix reference, pitch-altering transfer); it is used as a
+      comparative ddim / step tie-breaker. The scatter is the FAD-vs-F1 Pareto
+      view; ddim200 is marginally ahead on F1 while ddim100 wins FAD. Piano-roll
+      overlays show matched (green) / missed (red) / false-positive (orange)
+      notes on the busiest window.
+
+# -------- 04 Latency / RTF: reuse render timings + chart -------------------
+latency:
+  reuse:
+    chart: G:/My Drive/MusicProject/versions/Israeli_3style/demo_external/_gallery/_assets/latency_by_ddim.png
+    segment_duration: 5.0
+    timing_jsons:
+      - G:/My Drive/MusicProject/versions/Israeli_3style/demo_external/_renders/demo_Israeli_Artists_ddim100/timing_infos.json
+      - G:/My Drive/MusicProject/versions/Israeli_3style/demo_external/_renders/demo_Israeli_Military_ddim100/timing_infos.json
+      - G:/My Drive/MusicProject/versions/Israeli_3style/demo_external/_renders/demo_Slakh_v0_ddim100/timing_infos.json
+      - G:/My Drive/MusicProject/versions/Israeli_3style/demo_external/_renders/demo_Israeli_Artists_ddim200/timing_infos.json
+      - G:/My Drive/MusicProject/versions/Israeli_3style/demo_external/_renders/demo_Israeli_Military_ddim200/timing_infos.json
+      - G:/My Drive/MusicProject/versions/Israeli_3style/demo_external/_renders/demo_Slakh_v0_ddim200/timing_infos.json
+    blurb: >-
+      Real diffusion latency measured on the whole-song external render pass
+      (L4 GPU). RTF = inference_seconds / audio_seconds. ddim200 runs twice the
+      diffusion steps but is only ~1.37x slower than ddim100, because the fixed
+      vocoding/IO overhead does not scale with step count -- so ddim100 wins on
+      both realism (FAD) and speed. Per 5 s of audio: ~0.74 s (ddim100) vs
+      ~1.0 s (ddim200).
+
+# -------- 05 Transfer grid: reuse the demo gallery -------------------------
+transfer:
+  title: "05. Style-transfer grid (5 external songs, both samplers)"
+  reuse:
+    source_dir: G:/My Drive/MusicProject/versions/Israeli_3style/demo_external/_gallery/_assets
+    source_index: G:/My Drive/MusicProject/versions/Israeli_3style/demo_external/_gallery/index.html
+    files:
+      - Rihanna_Diamonds__piano_roll.png
+      - Eminem_Lose_Yourself__piano_roll.png
+      - Metallica_Enter_Sandman__piano_roll.png
+      - Noa_Kirel_Unicorn__piano_roll.png
+      - Ravid_Plotnik_New_Day__piano_roll.png
+    globs:
+      - "*__step_224000__style_Israeli_Artists_ddim100__role_transferred__mel.png"
+      - "*__step_232000__style_Israeli_Artists_ddim200__role_transferred__mel.png"
+      - "*__step_238000__style_Israeli_Military_ddim100__role_transferred__mel.png"
+      - "*__step_238000__style_Israeli_Military_ddim200__role_transferred__mel.png"
+      - "*__step_248000__style_Slakh_v0_ddim100__role_transferred__mel.png"
+      - "*__step_248000__style_Slakh_v0_ddim200__role_transferred__mel.png"
+    blurb: >-
+      Qualitative style transfer of five deliberately out-of-domain songs
+      (pop / rap / metal / Israeli EDM-pop / Israeli hip-hop). Each song's
+      conditioning score is the piano-roll (Demucs -> Basic-Pitch); the model
+      re-renders it in each learned style. Shown here: one representative step
+      per style x sampler (ddim100 vs ddim200); the linked gallery has every
+      step, both samplers, mel + waveform + audio for all 70 renders.

@@ -1,0 +1,224 @@
+# ---------------------------------------------------------------------------
+# FINAL (refined) PROJECT SHOWCASE config — consumed by build_showcase.py.
+#
+# This is the curated version for the grader: 1-2 examples per topic instead
+# of everything (advisor feedback). The full showcase_config.yaml build stays
+# as the complete archive.
+#
+# Selection (approved 2026-07-19):
+#   DSP walkthrough  -> Rihanna - Diamonds (Western) + Noa Kirel - Unicorn (Israeli)
+#   Good transfers   -> Eminem - Lose Yourself + Ravid Plotnik - New Day
+#   Broken examples  -> Metallica - Enter Sandman + Rihanna "sounds like machine"
+#   Evaluation       -> 1-2 hand-picked figures per metric (not whole folders)
+#
+# Build (from MusicProject/):
+#   .\ml_env\Scripts\python.exe .\build_showcase.py `
+#       --config .\deliverables\showcase_config_final.yaml `
+#       --out_dir .\project_showcase_final
+# ---------------------------------------------------------------------------
+
+run_name: Israeli_3style
+title: "Music Style Transfer - Project Showcase"
+subtitle: "Score-conditioned diffusion - Israeli styles (Artists v1, Military v2) + Western rock v0"
+authors: "Yotam & Gal"
+
+drive_root: G:/My Drive/MusicProject
+version_dir: G:/My Drive/MusicProject/versions/Israeli_3style
+
+lite:
+  preview_seconds: 45
+
+# ------------------------------ 00 overview --------------------------------
+overview:
+  intro: >-
+    This project takes a Western pop or rock song and re-renders it in an
+    Israeli musical style, while keeping the original melody and chords
+    recognizable. In music terms we change how the song sounds - its
+    instruments and texture - without changing what is played. The system works
+    on mel-spectrograms, a compact picture of sound that shows which
+    frequencies are loud over time. A diffusion model - the same family of
+    models behind AI image generators - learns to draw the styled spectrogram
+    from two hints: a piano-roll of the notes to keep, and a style ID that says
+    which style to paint on top. A neural vocoder called BigVGAN then turns that
+    spectrogram back into audio you can play. The page below follows the
+    pipeline left to right - preprocessing, training, then results - with
+    something to hear or see at every stage.
+  results: >-
+    We set four measurable targets and met three of them. Realism (FAD, a
+    distance between our audio and real songs in each style) is well inside
+    target, so the output sounds like real music in that style. Speed is well
+    under real-time: generating five seconds of audio takes under a second on a
+    GPU. The one target we miss is note-level F1, our content-preservation
+    score. That number is low mostly because of how it is measured - both the
+    original and our output are transcribed by an imperfect automatic tool, so
+    the comparison is noisy on both sides, and our score tracks pitch only. When
+    we instead line the notes up visually (the piano-roll overlays), the melody
+    and harmony clearly survive the transfer, which is also what you can hear in
+    the examples.
+
+# ------------------------- 01 preprocessing demo ---------------------------
+# Refined: TWO featured songs (one Western, one Israeli), full DSP walkthrough
+# each; the piano-roll explainer card is added automatically.
+preprocessing:
+  featured_songs:
+    - {name: Rihanna_Diamonds,  label: "Rihanna - Diamonds (pop)"}
+    - {name: Noa_Kirel_Unicorn, label: "Noa Kirel - Unicorn (Israeli pop)"}
+
+# ------------------------------ 02 training --------------------------------
+training:
+  campaigns:
+    - id: slakh_v2
+      label: "1. Synthesized Western dataset only (clean note labels - architecture sanity)"
+      blurb: >-
+        A first run on a large synthesized Western multi-track dataset that
+        comes with exact, aligned note labels. This was a sanity check: if the
+        model cannot learn on clean data, it has no chance on our messier
+        Israeli material. It passed, so this run stayed in the final model as
+        the Western-rock reference style.
+    - id: Israeli_Shalom_Arik
+      label: "2. + Shalom Hanoch / Arik Einstein (first Israeli style)"
+      blurb: >-
+        Our first Israeli run: the Western baseline plus two singer-songwriter
+        styles (Shalom Hanoch and Arik Einstein). Here the note labels come from
+        an automatic transcription of full recordings, so they are noisier -
+        this run showed the model could still learn a real Israeli style from
+        imperfect data.
+    - id: Israeli_3style
+      label: "3. Final 3-style model (Western rock + Israeli Artists + Israeli Military)"
+      step_gallery: true
+      blurb: >-
+        The final model, trained on all three styles at once - Western rock, a
+        blend of Israeli artists, and Israeli military-band songs. One model
+        holds all three and we pick the style at generation time. This is the
+        model evaluated and demoed below.
+  narrative: >-
+    We ran three training campaigns and kept improving the data, not the model.
+    The network, the noise schedule and the way we feed in the score all stayed
+    fixed; what changed was the music we trained on - from clean Western data to
+    our own hand-built Israeli dataset. The loss curves stay stable across all
+    three runs, which tells us that any drop in Israeli quality comes from the
+    noisier data rather than the model design.
+  augmentation:
+    demo_song: Rihanna_Diamonds
+    sample_dir: "G:/My Drive/MusicProject/SourcePool/Arik Einstein/Single/praha"
+    narrative: >-
+      Because the Israeli data is small, we stretch it during training only
+      (never at test time), and each trick has a clear musical meaning.
+      Pitch-shift moves the whole clip up or down by up to two semitones (a
+      semitone is one piano key), so the model hears the same phrase in a
+      slightly different key. Time-stretch speeds the clip up or slows it down
+      by up to 10% without changing its pitch. SpecAugment hides a few random
+      stripes of the spectrogram so the model cannot lean on any single
+      frequency or moment. The pitch and tempo changes are applied to the mel
+      and the note-roll together, so the notes always stay lined up with the
+      sound. The clips below let you hear the original segment and each
+      augmented copy.
+  denoising_dir: deliverables/_denoising
+
+# ------------- 03 evaluation (hand-picked representative figures) ----------
+evaluation:
+  purity:
+    source_dir: G:/My Drive/MusicProject/versions/Israeli_3style/_dataset_purity
+    files:
+      - purity_Israeli_Artists.png
+      - purity_Israeli_Military.png
+      - dataset_purity_summary.json
+    dirs: []
+    blurb: >-
+      Before judging the model we check the data itself: were the songs we
+      collected for each style really one coherent "version"? We measure every
+      song against the rest of its own dataset with the same embedding distance
+      used for FAD (leave-one-song-out). Result: every single song in both
+      Israeli datasets sits below FAD 5 - the near-indistinguishable band -
+      with medians around 1.2, so both collections are sonically coherent. A
+      handful of songs are statistical outliers within their dataset (still
+      below 5), which matches what we hear: a few recordings with different
+      production. The two Israeli datasets are also close to each other
+      (pooled distance 0.29), which explains why their two styles can sound
+      related.
+  fad:
+    source_dir: G:/My Drive/MusicProject/versions/Israeli_3style/_finalist_metrics
+    files:
+      - fad_by_step.png
+      - finalist_metrics_summary.json
+      - fad_bells_overlay/overlay__Israeli_Artists.png
+      - fad_bells_overlay/overlay__Israeli_Military.png
+      - fad_pca/Artists_ddim100__step_224000.png
+      - fad_pca/Military_ddim100__step_238000.png
+    dirs: []
+    extra_sources:
+      - dir: G:/My Drive/MusicProject/versions/Israeli_3style/_embedding_clusters
+        files: [clusters_3d_pca.png]
+    blurb: >-
+      Frechet Audio Distance (FAD) measures how close our generated audio is to
+      real songs in the same style - lower is better. Across the finalist
+      checkpoints it sits around 2.2-2.5, far under our target of 9, so the
+      output lands close to real music in each style. Shown here: one PCA
+      scatter per style (the best checkpoint of each) and the per-style overlay
+      of all finalists.
+  f1:
+    source_dir: G:/My Drive/MusicProject/versions/Israeli_3style/_finalist_metrics
+    files:
+      - precision_recall_f1.png
+      - f1_vs_fad_scatter.png
+      - f1_pianoroll/Artists_ddim100__step_224000__oof_gozal.png
+      - f1_pianoroll/Military_ddim100__step_238000__hareut.png
+    dirs: []
+    blurb: >-
+      Note-level F1 checks how many of the original notes survive the transfer.
+      It reads low (about 3-4.5%) mainly because it compares two automatic
+      transcriptions, both noisy, and our score tracks pitch only. We use it as
+      a tie-breaker between checkpoints; the piano-roll overlays are the more
+      honest view of how well the melody is kept. Shown here: one overlay per
+      style on a held-out song.
+  latency:
+    chart: G:/My Drive/MusicProject/versions/Israeli_3style/demo_external/_gallery/_assets/latency_by_ddim.png
+    segment_duration: 5.0
+    blurb: >-
+      How fast generation runs, as a real-time factor (RTF = seconds of compute
+      per second of audio; below 1 is faster than real-time). We measure about
+      0.13 at 100 sampling steps and 0.20 at 200 - roughly 5-7x faster than
+      real-time on the GPU.
+
+# --------------- 04 inference results (curated, refined) -------------------
+inference:
+  curated_dir: deliverables/curated_examples
+  # Refined selection: two good-transfer songs, capped clips chosen
+  # round-robin across styles; two failure songs with a few clips each.
+  featured_songs: [Eminem_Lose_Yourself, Ravid_Plotnik_New_Day]
+  max_clips_per_song: 6
+  struggle_songs: [Metallica_Enter_Sandman, Rihanna_Diamonds]
+  max_struggle_clips_per_song: 3
+  song_labels:
+    Eminem_Lose_Yourself: "Eminem - Lose Yourself (rap)"
+    Ravid_Plotnik_New_Day: "Ravid Plotnik - New Day (Israeli hip-hop)"
+    Metallica_Enter_Sandman: "Metallica - Enter Sandman (metal)"
+    Rihanna_Diamonds: "Rihanna - Diamonds (pop)"
+  blurb: >-
+    Two songs chosen from outside our training styles, each re-rendered in the
+    learned styles. The notes are held fixed while the model repaints the sound
+    in the target style. Play the original, then any transferred version, and
+    listen for the same tune wearing a different style.
+
+# ------------------------------ specs board --------------------------------
+specs:
+  - name: "All-FAD (VGGish) - overall realism"
+    target: "<= 9.0"
+    achieved: "2.20 - 2.49 pooled (worst step 3.26)"
+    pass: true
+    note: "generated-vs-real Frechet distance on pretrained VGGish; ~4x under the bar"
+  - name: "Group-FAD (VGGish) - version conditioning"
+    target: "<= 7.0"
+    achieved: "2.20 - 2.49 per version; cosine-sim 0.85 - 0.89"
+    pass: true
+    note: "each style scored against its own held-out real audio; tight PCA/bell overlap confirms conditioning"
+  - name: "Note+Instrument F1 - score fidelity"
+    target: ">= 30%"
+    achieved: "3.1% - 4.5% (best 7.7% per song)"
+    pass: false
+    note: "NOT MET numerically, and known from the start - the score itself comes from a NOISY Basic-Pitch transcription of full-mix audio (not ground-truth MIDI), so perfectly preserving it was never achievable; transfer also alters pitch/timbre and the +/-50 ms polyphonic match is strict. Used as a comparative tie-breaker"
+  - name: "Latency / inference speed"
+    target: "<= 5 s per 5 s segment"
+    achieved: "0.67 s (ddim100) / 1.01 s (ddim200) per segment; RTF 0.133 / 0.202"
+    pass: true
+    note: "L4 GPU whole-song render; ~5-7x faster than real time"

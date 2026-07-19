@@ -1,0 +1,83 @@
+model:
+  mel_channels: 80
+  score_channels: 256          # 2 * 128 piano roll pitches, flattened
+  base_channels: 160
+  channel_mults: [1, 2, 3, 4]  # → 160, 320, 480, 640
+  num_res_blocks_enc: 2
+  num_res_blocks_dec: 3
+  attention_levels: [1, 2, 3]  # level 0 = top (128 ch), level 3 = bottleneck
+  attention_heads: 8
+  dropout: 0.1
+  n_groups: 32                 # GroupNorm groups
+
+conditioning:
+  n_versions: 3                # must equal N_VERSIONS in train_israeli.ipynb Cell 1
+                               # (0=slakh_rock, 1=Israeli_rock_blended, 2=Israeli_military)
+  version_emb_dim: 128
+  time_emb_dim: 128
+  null_version_idx: 3          # must always equal n_versions (CFG null slot is one past the last real style)
+
+diffusion:
+  T_train: 1000
+  schedule: cosine
+  cosine_s: 0.008
+  loss: l1
+
+training:
+  batch_size: 32
+  lr: 1.0e-4
+  lr_min: 1.0e-5
+  total_steps: 250000
+  warmup_steps: 2000
+  decay_start_frac: 0.7        # linear decay starts at 70% of total_steps (~175k) so late checkpoints settle into the minimum instead of oscillating under flat LR
+  weight_decay: 1.0e-4
+  grad_clip: 1.0
+  ema_decay: 0.999
+  precision: bf16              # bfloat16 on A100; fall back to fp32 on CPU
+  cfg_drop_score: 0.10
+  cfg_drop_version: 0.10
+  cfg_drop_both: 0.05
+  save_every: 2000             # checkpoint interval (steps); also drives sample + mel-viz cadence
+  checkpoint_keep_last: -1     # -1 = keep all step checkpoints (no pruning)
+  sample_every: 2000           # unused by train.py; samples + mel-viz are generated every save_every step
+  log_every: 100
+
+sampling:
+  N_ddim: 100
+  eta: 0.0                     # deterministic DDIM
+  cfg_score: 1.25
+  cfg_version: 1.25
+  overlap_frames: 32
+
+data:
+  segment_frames: 430          # 5s at sr=22050, hop=256
+  mel_bins: 80
+  piano_roll_pitches: 128
+  train_manifest: data/train.csv
+  val_manifest: data/val.csv
+  num_workers: 4
+  pin_memory: true
+  persistent_workers: true
+
+paths:
+  drive_root: "/content/drive/MyDrive/MusicProject"
+  data_root: "${paths.drive_root}/MusicProjectData"
+  slakh_root: "${paths.drive_root}/slakh_processed"
+  manifest_dir: "${paths.drive_root}/data"
+  checkpoint_dir: "${paths.drive_root}/checkpoints"
+  log_dir: "${paths.drive_root}/logs"
+
+augmentation:
+  enabled: true
+  pitch_shift:
+    p: 0.5
+    max_semitones: 2
+  time_stretch:
+    p: 0.4
+    max_pct: 0.10
+  spec_augment:
+    p: 0.5
+    time_mask_max: 30
+    freq_mask_max: 8
+    n_time: 2
+    n_freq: 2

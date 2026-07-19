@@ -1,0 +1,54 @@
+# Step-search spec for the 3-version run (model: Israeli_3style), STYLE = Israeli Military bands.
+# Conditions the shared multi-version model on version_id=2.
+#   python -m postprocessing.run_inference_batch --run-spec configs/run_spec_Israeli_Military.yaml
+#
+# Cross-product = songs x steps x roles  (target_style fixed here).
+# Output stem: {song}__step_{N}__style_{target}__role_{role}
+# Outputs -> output_root/<run_id>/{audio,mels,midi,metrics}/ + _summary.csv,
+# and one row per output appended to <output_root>/_index.csv.
+#
+# NOTE: paths are Colab-side (/content/drive/...), because run_inference_batch
+# runs on Colab. The later local F1 pass takes --run-dir directly (G:\ path).
+
+run_id: Israeli_Military_step_search_20260607
+version_id: 2
+target_style: Israeli_Military
+style_version_id: 2                 # version embedding channel to condition on
+
+output_root: /content/drive/MyDrive/MusicProject/versions/Israeli_3style/inference_runs
+checkpoint_template: /content/drive/MyDrive/MusicProject/checkpoints/Israeli_3style/step_{step}.pt
+
+# The 11 winner checkpoints chosen by ear in the Cell-7c / 7d listening tests.
+steps: [190000, 202000, 204000, 212000, 220000, 224000, 232000, 234000, 238000, 242000, 248000]
+
+# Held-out songs only (excluded from training; from versions/Israeli_Military/held_out.csv).
+songs:
+  - name: givat_hatchmoshet
+    midi: "/content/drive/MyDrive/MusicProject/SourcePool/Lehakat Pikud Merkaz/Single/givat hatchmoshet/givat hatchmoshet.mid"
+    duration: 30.0
+  - name: hareut
+    midi: "/content/drive/MyDrive/MusicProject/SourcePool/Lehakat HaNachal/Single/hareut/hareut.mid"
+    duration: 30.0
+
+roles: [transferred]
+
+# Frozen across the sweep so the checkpoint step is the only varying axis.
+# UPDATE after the Cell-7d grid if a stronger CFG / more DDIM steps wins.
+sampling:
+  ddim_steps: 100
+  cfg_score: 1.25
+  cfg_version: 1.25
+  mel_min: -80.0
+  mel_max: 0.0
+
+metrics:
+  f1:
+    enable: true                 # local-only: needs basic_pitch_env (Windows)
+    onset_tolerance_s: 0.05
+  fad:
+    enable: true
+    # Drop the held-out REAL military-band WAVs here before the FAD cell
+    # (e.g. the .wav next to each .mid above), so FAD compares like-for-like.
+    real_dir: /content/drive/MyDrive/MusicProject/versions/Israeli_3style/fad_real/Israeli_Military
+  latency:
+    enable: true

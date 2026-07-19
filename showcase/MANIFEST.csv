@@ -1,0 +1,76 @@
+stage,asset,type,title,caption,spec
+diagrams,assets/diagrams/00_pipeline_macro.svg,image,Full pipeline block diagram (SVG),block diagram export for deliverables,block diagram
+diagrams,assets/diagrams/00_pipeline_macro.png,image,Full pipeline block diagram (PNG),block diagram export for deliverables,block diagram
+diagrams,assets/diagrams/01_preprocessing.svg,image,Preprocessing block diagram (SVG),block diagram export for deliverables,block diagram
+diagrams,assets/diagrams/01_preprocessing.png,image,Preprocessing block diagram (PNG),block diagram export for deliverables,block diagram
+diagrams,assets/diagrams/02_model.svg,image,Model (training + inference) block diagram (SVG),block diagram export for deliverables,block diagram
+diagrams,assets/diagrams/02_model.png,image,Model (training + inference) block diagram (PNG),block diagram export for deliverables,block diagram
+diagrams,assets/diagrams/02_clean_vs_noisy.svg,image,Clean vs noisy score conditioning (SVG),block diagram export for deliverables,block diagram
+diagrams,assets/diagrams/02_clean_vs_noisy.png,image,Clean vs noisy score conditioning (PNG),block diagram export for deliverables,block diagram
+diagrams,assets/diagrams/02_unet_architecture.svg,image,Detailed U-Net architecture (SVG),block diagram export for deliverables,block diagram
+diagrams,assets/diagrams/02_unet_architecture.png,image,Detailed U-Net architecture (PNG),block diagram export for deliverables,block diagram
+diagrams,assets/diagrams/02_conditioning.svg,image,FiLM + classifier-free-guidance conditioning (SVG),block diagram export for deliverables,block diagram
+diagrams,assets/diagrams/02_conditioning.png,image,FiLM + classifier-free-guidance conditioning (PNG),block diagram export for deliverables,block diagram
+diagrams,assets/diagrams/03_postprocessing.svg,image,Postprocessing block diagram (SVG),block diagram export for deliverables,block diagram
+diagrams,assets/diagrams/03_postprocessing.png,image,Postprocessing block diagram (PNG),block diagram export for deliverables,block diagram
+01_preprocessing,assets/01_preprocessing/Rihanna_Diamonds/original.wav,audio,Rihanna - Diamonds (pop) - original,input song,preprocessing input
+01_preprocessing,assets/01_preprocessing/Rihanna_Diamonds/score_as_audio.wav,audio,Rihanna - Diamonds (pop) - score as audio,Basic-Pitch MIDI rendered to sound,score conditioning
+01_preprocessing,assets/01_preprocessing/Rihanna_Diamonds/original_mel.png,image,Rihanna - Diamonds (pop) - mel,model target space,mel representation
+01_preprocessing,assets/01_preprocessing/Rihanna_Diamonds/piano_roll.png,image,Rihanna - Diamonds (pop) - piano roll,score conditioning,score conditioning
+01_preprocessing,assets/01_preprocessing/Rihanna_Diamonds/dsp_pipeline.png,image,Rihanna - Diamonds (pop) - DSP pipeline,full signal-processing chain applied to the song,DSP preprocessing
+01_preprocessing,assets/01_preprocessing/Noa_Kirel_Unicorn/original.wav,audio,Noa Kirel - Unicorn (Israeli pop) - original,input song,preprocessing input
+01_preprocessing,assets/01_preprocessing/Noa_Kirel_Unicorn/score_as_audio.wav,audio,Noa Kirel - Unicorn (Israeli pop) - score as audio,Basic-Pitch MIDI rendered to sound,score conditioning
+01_preprocessing,assets/01_preprocessing/Noa_Kirel_Unicorn/original_mel.png,image,Noa Kirel - Unicorn (Israeli pop) - mel,model target space,mel representation
+01_preprocessing,assets/01_preprocessing/Noa_Kirel_Unicorn/piano_roll.png,image,Noa Kirel - Unicorn (Israeli pop) - piano roll,score conditioning,score conditioning
+01_preprocessing,assets/01_preprocessing/Noa_Kirel_Unicorn/dsp_pipeline.png,image,Noa Kirel - Unicorn (Israeli pop) - DSP pipeline,full signal-processing chain applied to the song,DSP preprocessing
+01_preprocessing,assets/01_preprocessing/_piano_roll_explainer/piano_roll_annotated.png,image,piano roll - annotated explainer,what a piano roll is,score conditioning
+01_preprocessing,assets/01_preprocessing/_piano_roll_explainer/piano_roll_demo.mp4,video,piano roll - demo video,Ode to Joy piano roll with moving cursor + audio,score conditioning
+02_training,assets/02_training/slakh_v2/loss_log.csv,data,slakh_v2 - loss log,raw loss/lr/grad,training stability
+02_training,assets/02_training/slakh_v2/denoising.png,image,slakh_v2 - denoising,reverse diffusion,diffusion behaviour
+02_training,assets/02_training/Israeli_Shalom_Arik/loss_log.csv,data,Israeli_Shalom_Arik - loss log,raw loss/lr/grad,training stability
+02_training,assets/02_training/Israeli_Shalom_Arik/denoising.png,image,Israeli_Shalom_Arik - denoising,reverse diffusion,diffusion behaviour
+02_training,assets/02_training/Israeli_3style/step_gallery.png,image,Israeli_3style - step gallery,model progress,sample quality
+02_training,assets/02_training/Israeli_3style/loss_log.csv,data,Israeli_3style - loss log,raw loss/lr/grad,training stability
+02_training,assets/02_training/Israeli_3style/denoising.png,image,Israeli_3style - denoising,reverse diffusion,diffusion behaviour
+02_training,assets/02_training/final_train_val_loss.png,image,Israeli_3style - train vs validation loss,"final run, two-panel",training stability
+02_training,assets/02_training/augmentation.png,image,data augmentation,JointAugment variants,data augmentation
+02_training,assets/02_training/augmentation_audio/aug_praha.wav,audio,augmentation - original (real source-pool song),audible waveform augmentation,data augmentation
+02_training,assets/02_training/augmentation_audio/aug_praha_ps+2.wav,audio,augmentation - pitch shift +2 semitones,audible waveform augmentation,data augmentation
+02_training,assets/02_training/augmentation_audio/aug_praha_ps-2.wav,audio,augmentation - pitch shift -2 semitones,audible waveform augmentation,data augmentation
+02_training,assets/02_training/augmentation_audio/aug_praha_ts0.9.wav,audio,augmentation - time stretch x0.9 (slower),audible waveform augmentation,data augmentation
+02_training,assets/02_training/augmentation_audio/aug_praha_ts1.1.wav,audio,augmentation - time stretch x1.1 (faster),audible waveform augmentation,data augmentation
+03_evaluation,assets/03_evaluation/purity/purity_Israeli_Artists.png,image,purity: purity_Israeli_Artists.png,Dataset purity (is each style one coherent sound?),PURITY
+03_evaluation,assets/03_evaluation/purity/purity_Israeli_Military.png,image,purity: purity_Israeli_Military.png,Dataset purity (is each style one coherent sound?),PURITY
+03_evaluation,assets/03_evaluation/purity/dataset_purity_summary.json,data,purity: dataset_purity_summary.json,Dataset purity (is each style one coherent sound?),PURITY
+03_evaluation,assets/03_evaluation/fad/fad_by_step.png,image,fad: fad_by_step.png,Frechet Audio Distance (realism),FAD
+03_evaluation,assets/03_evaluation/fad/finalist_metrics_summary.json,data,fad: finalist_metrics_summary.json,Frechet Audio Distance (realism),FAD
+03_evaluation,assets/03_evaluation/fad/fad_bells_overlay__overlay__Israeli_Artists.png,image,fad: fad_bells_overlay__overlay__Israeli_Artists.png,Frechet Audio Distance (realism),FAD
+03_evaluation,assets/03_evaluation/fad/fad_bells_overlay__overlay__Israeli_Military.png,image,fad: fad_bells_overlay__overlay__Israeli_Military.png,Frechet Audio Distance (realism),FAD
+03_evaluation,assets/03_evaluation/fad/fad_pca__Artists_ddim100__step_224000.png,image,fad: fad_pca__Artists_ddim100__step_224000.png,Frechet Audio Distance (realism),FAD
+03_evaluation,assets/03_evaluation/fad/fad_pca__Military_ddim100__step_238000.png,image,fad: fad_pca__Military_ddim100__step_238000.png,Frechet Audio Distance (realism),FAD
+03_evaluation,assets/03_evaluation/fad/clusters_3d_pca.png,image,fad: clusters_3d_pca.png,Frechet Audio Distance (realism),FAD
+03_evaluation,assets/03_evaluation/f1/precision_recall_f1.png,image,f1: precision_recall_f1.png,Note-level F1 (score fidelity),F1
+03_evaluation,assets/03_evaluation/f1/f1_vs_fad_scatter.png,image,f1: f1_vs_fad_scatter.png,Note-level F1 (score fidelity),F1
+03_evaluation,assets/03_evaluation/f1/f1_pianoroll__Artists_ddim100__step_224000__oof_gozal.png,image,f1: f1_pianoroll__Artists_ddim100__step_224000__oof_gozal.png,Note-level F1 (score fidelity),F1
+03_evaluation,assets/03_evaluation/f1/f1_pianoroll__Military_ddim100__step_238000__hareut.png,image,f1: f1_pianoroll__Military_ddim100__step_238000__hareut.png,Note-level F1 (score fidelity),F1
+03_evaluation,assets/03_evaluation/latency/latency_by_ddim.png,image,latency chart,RTF by sampler,RTF < 1.0
+04_inference_results,assets/04_inference_results/Eminem_Lose_Yourself/original.wav,audio,Eminem_Lose_Yourself - original,A/B reference,inference input
+04_inference_results,assets/04_inference_results/Eminem_Lose_Yourself/Israeli_Artists_ddim100_step212000.wav,audio,Eminem_Lose_Yourself - Israeli Artists · ddim100 · step 212k,style transfer output,style transfer
+04_inference_results,assets/04_inference_results/Eminem_Lose_Yourself/Israeli_Artists_ddim100_step224000.wav,audio,Eminem_Lose_Yourself - Israeli Artists · ddim100 · step 224k,style transfer output,style transfer
+04_inference_results,assets/04_inference_results/Eminem_Lose_Yourself/Israeli_Military_ddim100_step238000.wav,audio,Eminem_Lose_Yourself - Israeli Military · ddim100 · step 238k,style transfer output,style transfer
+04_inference_results,assets/04_inference_results/Eminem_Lose_Yourself/Israeli_Military_ddim100_step242000.wav,audio,Eminem_Lose_Yourself - Israeli Military · ddim100 · step 242k,style transfer output,style transfer
+04_inference_results,assets/04_inference_results/Eminem_Lose_Yourself/Slakh_v0_ddim100_step248000.wav,audio,Eminem_Lose_Yourself - Western rock · ddim100 · step 248k,style transfer output,style transfer
+04_inference_results,assets/04_inference_results/Eminem_Lose_Yourself/Slakh_v0_ddim200_step248000.wav,audio,Eminem_Lose_Yourself - Western rock · ddim200 · step 248k,style transfer output,style transfer
+04_inference_results,assets/04_inference_results/Ravid_Plotnik_New_Day/original.wav,audio,Ravid_Plotnik_New_Day - original,A/B reference,inference input
+04_inference_results,assets/04_inference_results/Ravid_Plotnik_New_Day/Israeli_Artists_ddim100_step212000.wav,audio,Ravid_Plotnik_New_Day - Israeli Artists · ddim100 · step 212k,style transfer output,style transfer
+04_inference_results,assets/04_inference_results/Ravid_Plotnik_New_Day/Israeli_Artists_ddim100_step224000.wav,audio,Ravid_Plotnik_New_Day - Israeli Artists · ddim100 · step 224k,style transfer output,style transfer
+04_inference_results,assets/04_inference_results/Ravid_Plotnik_New_Day/Israeli_Military_ddim100_step238000.wav,audio,Ravid_Plotnik_New_Day - Israeli Military · ddim100 · step 238k,style transfer output,style transfer
+04_inference_results,assets/04_inference_results/Ravid_Plotnik_New_Day/Israeli_Military_ddim100_step242000.wav,audio,Ravid_Plotnik_New_Day - Israeli Military · ddim100 · step 242k,style transfer output,style transfer
+04_inference_results,assets/04_inference_results/Ravid_Plotnik_New_Day/Slakh_v0_ddim100_step248000.wav,audio,Ravid_Plotnik_New_Day - Western rock · ddim100 · step 248k,style transfer output,style transfer
+04_inference_results,assets/04_inference_results/Ravid_Plotnik_New_Day/Slakh_v0_ddim200_step248000.wav,audio,Ravid_Plotnik_New_Day - Western rock · ddim200 · step 248k,style transfer output,style transfer
+05_struggles,assets/05_struggles/Rihanna_Diamonds/Israeli_Artists_ddim200_step248000.wav,audio,Rihanna_Diamonds - Israeli Artists · ddim200 · step 248k (struggle),failure case,known limitation
+05_struggles,assets/05_struggles/Rihanna_Diamonds/Israeli_Military_ddim100_step242000.wav,audio,Rihanna_Diamonds - Israeli Military · ddim100 · step 242k (struggle),failure case,known limitation
+05_struggles,assets/05_struggles/Rihanna_Diamonds/Israeli_Military_ddim100_step248000.wav,audio,Rihanna_Diamonds - Israeli Military · ddim100 · step 248k (struggle),failure case,known limitation
+05_struggles,assets/05_struggles/Metallica_Enter_Sandman/Israeli_Artists_ddim100_step212000.wav,audio,Metallica_Enter_Sandman - Israeli Artists · ddim100 · step 212k (struggle),failure case,known limitation
+05_struggles,assets/05_struggles/Metallica_Enter_Sandman/Israeli_Artists_ddim100_step224000.wav,audio,Metallica_Enter_Sandman - Israeli Artists · ddim100 · step 224k (struggle),failure case,known limitation
+05_struggles,assets/05_struggles/Metallica_Enter_Sandman/Israeli_Artists_ddim100_step238000.wav,audio,Metallica_Enter_Sandman - Israeli Artists · ddim100 · step 238k (struggle),failure case,known limitation

@@ -1,0 +1,40 @@
+# ML Environment Requirements (Python 3.12)
+# For main pipeline: YouTube download, DSP processing, ML/DL operations
+
+# PyTorch - Deep Learning Framework (CPU version)
+--index-url https://download.pytorch.org/whl/cpu
+torch==2.9.1+cpu
+torchvision==0.24.1+cpu
+torchaudio==2.9.1+cpu
+
+# Audio Processing
+librosa==0.11.0
+soundfile==0.13.1
+scipy==1.16.3
+audioread==3.1.0
+
+# MIDI Processing
+pretty_midi==0.2.11
+mido==1.3.3
+
+# Source Separation
+demucs>=4.0.0
+
+# Vocoder - BigVGAN v2 (NVIDIA, music-trained vocoder from HuggingFace)
+bigvgan>=2.4.0
+
+# Visualization
+matplotlib==3.10.8
+
+# Google Drive API
+google-api-python-client==2.187.0
+google-auth-httplib2==0.3.0
+google-auth-oauthlib==1.2.3
+
+# YouTube Download
+yt-dlp==2025.12.8
+
+# Scientific Computing
+numpy==2.3.5
+scikit-learn==1.8.0
+numba==0.63.1

@@ -1,0 +1,146 @@
+# version_Israeli_Artists.yaml — Version 1 (v1) full Israeli singer-songwriter set.
+# SOLE input to `python -m preprocessing.derive_version --spec <this>` (DSP-only, Colab-safe).
+# Basic-Pitch must already have run on the source pool.
+#
+# Drive layout assumed (see ../README.md "Israeli Data Pipeline"):
+#   <drive_root>/SourcePool/<artist>/<album>/<song>/{<song>.wav, <song>.mid, augmented/...}
+#   <drive_root>/versions/Israeli_Artists/processed_data/...   ← derive_version writes here
+#
+# Provenance: generated from SourcePool/source_pool_index.csv (ingest_status == ok),
+# DEDUPLICATED by source URL to prevent train/val leakage. 10 rows were dropped:
+#   - 9 duplicate-URL re-ingests (uf gozal, lo at lo, ani ohev otach, vidui,
+#     boi, shir erev, kvar achshav, modeh ani)  -> kept first occurrence only
+#   - 1 skipped entry (Yoni Rechter "haikar ze haromantika", 74-min playlist URL)
+#   - "Lehakat HaNahal / shir lashalom" excluded here (it belongs to v2 military).
+# Net: 88 unique songs across 13 artists.
+
+version_id: 1
+style_name: Israeli_Artists
+
+# DSPConfig overrides — kept identical to project defaults so Israeli vs.
+# Slakh mel tensors are interchangeable for the diffusion UNet.
+dsp:
+  sample_rate: 22050
+  hop_length: 256
+  n_fft: 1024
+  n_mels: 80
+  fmax: 8000
+  segment_duration: 5.0   # → 430 mel frames per segment
+
+# Offline augmentation policy. Tags emitted by
+# `preprocessing.augmentation.DEFAULT_AUGMENTATIONS`
+# (pitch_shift_+2, pitch_shift_-2, time_stretch_0.9, time_stretch_1.1).
+# Set `include_augmented: false` on a song to skip its augmented variants.
+augmentation_policy: default
+
+# Held-out songs (D-set) — EXCLUDED from training in `preprocessing.split_dataset`.
+# Names below match the `song_name` field of entries in `songs:` exactly.
+held_out_songs:
+  - oof gozal
+  - mechakim lamashiach
+  - eich ze shekochav
+
+# ---- Songs to pull from SourcePool/ into this version ------------------------
+# Each entry resolves to SourcePool/<artist>/<album>/<song_name>/
+songs:
+  # ---- Arik Einstein (18) ----
+  - { artist: Arik Einstein, album: Shablul, song_name: lama li lakachat lalev, include_augmented: true }
+  - { artist: Arik Einstein, album: Sa Leat, song_name: sa leat, include_augmented: true }
+  - { artist: Arik Einstein, album: Shablul, song_name: ani roeh ota baderech lagimnasia, include_augmented: true }
+  - { artist: Arik Einstein, album: Shablul, song_name: avshalom, include_augmented: true }
+  - { artist: Arik Einstein, album: Shablul, song_name: ma ata ose ksheata kam baboker, include_augmented: true }
+  - { artist: Arik Einstein, album: Badeshe Etsel Avigdor, song_name: ani veata, include_augmented: true }
+  - { artist: Arik Einstein, album: Single, song_name: yom yom, include_augmented: true }
+  - { artist: Arik Einstein, album: Hashanim HaRishonot, song_name: hachnisini tachat knafech, include_augmented: true }
+  - { artist: Arik Einstein, album: Single, song_name: yesh li simpatia, include_augmented: true }
+  - { artist: Arik Einstein, album: Single, song_name: tzel etz tamar, include_augmented: true }
+  - { artist: Arik Einstein, album: Single, song_name: tapuchim utmarim, include_augmented: true }
+  - { artist: Arik Einstein, album: Eretz Yisrael Hayeshana Vehatova, song_name: atzur mitzchech, include_augmented: true }
+  - { artist: Arik Einstein, album: Al Gvul Haor, song_name: oof gozal, include_augmented: true }   # HELD OUT
+  - { artist: Arik Einstein, album: Single, song_name: shemesh retuva, include_augmented: true }
+  - { artist: Arik Einstein, album: Single, song_name: praha, include_augmented: true }
+  - { artist: Arik Einstein, album: Yesh Bi Ahava, song_name: yesh bi ahava, include_augmented: true }
+  - { artist: Arik Einstein, album: Al Gvul Haor, song_name: shir hashayara, include_augmented: true }
+  - { artist: Arik Einstein, album: Single, song_name: ani ohev otach hayom, include_augmented: true }
+  # ---- Shalom Hanoch (14) ----
+  - { artist: Shalom Hanoch, album: Adam Betoch Atzmo, song_name: adam betoch atzmo, include_augmented: true }
+  - { artist: Shalom Hanoch, album: Single, song_name: leat leat, include_augmented: true }
+  - { artist: Shalom Hanoch, album: Single, song_name: ahavat neorai, include_augmented: true }
+  - { artist: Shalom Hanoch, album: Single, song_name: deja vu, include_augmented: true }
+  - { artist: Shalom Hanoch, album: Single, song_name: tzemach bar, include_augmented: true }
+  - { artist: Shalom Hanoch, album: Single, song_name: kol echad rotze, include_augmented: true }
+  - { artist: Shalom Hanoch, album: Mechakim Lamashiach, song_name: mechakim lamashiach, include_augmented: true }   # HELD OUT
+  - { artist: Shalom Hanoch, album: Shalom Hanoch, song_name: maya, include_augmented: true }
+  - { artist: Shalom Hanoch, album: Shalom Hanoch, song_name: layla, include_augmented: true }
+  - { artist: Shalom Hanoch, album: Single, song_name: ani achshav, include_augmented: true }
+  - { artist: Shalom Hanoch, album: Single, song_name: shir derech, include_augmented: true }
+  - { artist: Shalom Hanoch, album: Single, song_name: kacha ve kach, include_augmented: true }
+  - { artist: Shalom Hanoch, album: Sof Onat Hatapuzim, song_name: sof onat hatapuzim, include_augmented: true }
+  - { artist: Shalom Hanoch, album: Single, song_name: shirim pshutim, include_augmented: true }
+  # ---- Matti Caspi (13) ----
+  - { artist: Matti Caspi, album: Matti Caspi, song_name: eich ze shekochav, include_augmented: true }   # HELD OUT
+  - { artist: Matti Caspi, album: Matti Caspi 2, song_name: brit olam, include_augmented: true }
+  - { artist: Matti Caspi, album: Matti Caspi, song_name: kshe elohim amar bapaam harishona, include_augmented: true }
+  - { artist: Matti Caspi, album: Matti Caspi, song_name: noach, include_augmented: true }
+  - { artist: Matti Caspi, album: Matti Caspi, song_name: yemei binyamina, include_augmented: true }
+  - { artist: Matti Caspi, album: Single, song_name: od tireh od tireh, include_augmented: true }
+  - { artist: Matti Caspi, album: Matti Caspi, song_name: hinei hinei, include_augmented: true }
+  - { artist: Matti Caspi, album: Matti Caspi, song_name: lo yadati shetelchi mimeni, include_augmented: true }
+  - { artist: Matti Caspi, album: Matti Caspi, song_name: shirat hasirenah, include_augmented: true }
+  - { artist: Matti Caspi, album: Matti Caspi, song_name: samba beshnei, include_augmented: true }
+  - { artist: Matti Caspi, album: Matti Caspi, song_name: mitachat lashamayim, include_augmented: true }
+  - { artist: Matti Caspi, album: Matti Caspi, song_name: hakol patuach, include_augmented: true }
+  - { artist: Matti Caspi, album: Matti Caspi, song_name: yalduti hashniya, include_augmented: true }
+  # ---- Yehudit Ravitz (10) ----
+  - { artist: Yehudit Ravitz, album: Mila Tova, song_name: mila tova, include_augmented: true }
+  - { artist: Yehudit Ravitz, album: Baa MeAhava, song_name: baah meahava, include_augmented: true }
+  - { artist: Yehudit Ravitz, album: Baa MeAhava, song_name: shabatot vehagim, include_augmented: true }
+  - { artist: Yehudit Ravitz, album: Single, song_name: rak at, include_augmented: true }
+  - { artist: Yehudit Ravitz, album: Single, song_name: ata li laila, include_augmented: true }
+  - { artist: Yehudit Ravitz, album: Single, song_name: ani shomaat shuv, include_augmented: true }
+  - { artist: Yehudit Ravitz, album: Single, song_name: yesh makom, include_augmented: true }
+  - { artist: Yehudit Ravitz, album: Single, song_name: od paam, include_augmented: true }
+  - { artist: Yehudit Ravitz, album: Single, song_name: slichot, include_augmented: true }
+  - { artist: Yehudit Ravitz, album: Single, song_name: gan naul, include_augmented: true }
+  # ---- Yoni Rechter (5) ----
+  - { artist: Yoni Rechter, album: Yoni Rechter, song_name: boi, include_augmented: true }
+  - { artist: Yoni Rechter, album: Single, song_name: shir erev, include_augmented: true }
+  - { artist: Yoni Rechter, album: Single, song_name: kvar achshav, include_augmented: true }
+  - { artist: Yoni Rechter, album: Single, song_name: at shira, include_augmented: true }
+  - { artist: Yoni Rechter, album: Single, song_name: yeladim ze simcha, include_augmented: true }
+  # ---- Gidi Gov (6) ----
+  - { artist: Gidi Gov, album: Ein Od Yom, song_name: ein od yom, include_augmented: true }
+  - { artist: Gidi Gov, album: Single, song_name: naara bemishkafayim, include_augmented: true }
+  - { artist: Gidi Gov, album: Single, song_name: ani shuv mitahav, include_augmented: true }
+  - { artist: Gidi Gov, album: Single, song_name: shalal sharav, include_augmented: true }
+  - { artist: Gidi Gov, album: Single, song_name: kol ma sheyesh li, include_augmented: true }
+  - { artist: Gidi Gov, album: Single, song_name: galbi, include_augmented: true }
+  # ---- Meir Ariel (6) ----
+  - { artist: Meir Ariel, album: Yaldei Teva, song_name: geshem, include_augmented: true }
+  - { artist: Meir Ariel, album: Single, song_name: neshika, include_augmented: true }
+  - { artist: Meir Ariel, album: Shirey Chag Umoed Venofel, song_name: terminal luminalt, include_augmented: true }
+  - { artist: Meir Ariel, album: Single, song_name: zar hayiti gam ani, include_augmented: true }
+  - { artist: Meir Ariel, album: Shirey Chag Umoed Venofel, song_name: shir kaev, include_augmented: true }
+  - { artist: Meir Ariel, album: Single, song_name: agadat deshe, include_augmented: true }
+  # ---- Shlomo Artzi (8) ----
+  - { artist: Shlomo Artzi, album: Pitom Achshav Pitom Hayom, song_name: pitom achshav pitom hayom, include_augmented: true }
+  - { artist: Shlomo Artzi, album: Ahavtia, song_name: ahavtia, include_augmented: true }
+  - { artist: Shlomo Artzi, album: Single, song_name: achrei hakol at shir, include_augmented: true }
+  - { artist: Shlomo Artzi, album: Yareach, song_name: yareach, include_augmented: true }
+  - { artist: Shlomo Artzi, album: Tirkod, song_name: nivreti lach, include_augmented: true }
+  - { artist: Shlomo Artzi, album: Gever Holech Le'ibud, song_name: haish hahu, include_augmented: true }
+  - { artist: Shlomo Artzi, album: Yareach, song_name: ze ma shenishar, include_augmented: true }
+  - { artist: Shlomo Artzi, album: Tirkod, song_name: tirkod, include_augmented: true }
+  # ---- Corinne Allal (1) ----
+  - { artist: Corinne Allal, album: Zan Nadir, song_name: ein li eretz acheret, include_augmented: true }
+  # ---- Yehuda Poliker (3) ----
+  - { artist: Yehuda Poliker, album: Simanim Shel Derech, song_name: od lo ahavti dai, include_augmented: true }
+  - { artist: Yehuda Poliker, album: Efer Veavak, song_name: efer veavak, include_augmented: true }
+  - { artist: Yehuda Poliker, album: Single, song_name: prachim bakaneh, include_augmented: true }
+  # ---- Yehoram Gaon (2) ----
+  - { artist: Yehoram Gaon, album: Single, song_name: shir ahava yashan, include_augmented: true }
+  - { artist: Yehoram Gaon, album: Kazablan, song_name: kol hakavod, include_augmented: true }
+  # ---- Esther Ofarim (1) ----
+  - { artist: Esther Ofarim, album: Hayu Leilot, song_name: hayu leilot, include_augmented: true }
+  # ---- Chava Alberstein (1) ----
+  - { artist: Chava Alberstein, album: Lu Yehi, song_name: lu yehi, include_augmented: true }

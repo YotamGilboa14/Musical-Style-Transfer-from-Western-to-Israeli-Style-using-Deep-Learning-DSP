@@ -1,0 +1,77 @@
+# Example config for build_deliverables.py
+# Copy this file, edit paths, then:
+#   python build_deliverables.py --config deliverables/my_config.yaml
+
+run_name: Israeli_Shalom_Arik_example
+style_name: Israeli
+version_id: 1
+
+# Optional pointer to a versions/<v>/inference_runs/<run_id>/ directory.
+# When set, downstream stages (02-05) may read auto-generated assets from
+# this run (audio/*.wav, mels/*.mel.pt) instead of bespoke paths.
+inference_run_id: Israeli_Shalom_Arik_step_search_2026_03_01
+
+# -------- Phase A: pre-training data quality (input-side) ------------------
+# Directory containing train.csv, val.csv, test.csv produced by split_dataset.
+splits_dir: ../data/splits_israeli/
+min_hours: 3.0
+
+# -------- Phase A.5: preprocessing demo (raw-WAV → mel walkthrough) -------
+# One PNG per featured song explaining every DSP step. WAV/MIDI paths are
+# resolved relative to this config file.
+preprocessing:
+  featured_songs:
+    - name: AuSep_1_tpt_33_Elise
+      wav: ../benchmark_output/AuSep_1_tpt_33_Elise/AuSep_1_tpt_33_Elise_original.wav
+      midi: ../benchmark_output/AuSep_1_tpt_33_Elise/reference.mid
+    # Add more entries here, e.g.:
+    # - name: Atur_Mitzchek
+    #   wav: ../G:/My Drive/MusicProject/source_pool/Arik_Einstein/Singles/Atur_Mitzchek/Atur_Mitzchek.wav
+    #   midi: ../G:/My Drive/MusicProject/source_pool/Arik_Einstein/Singles/Atur_Mitzchek/Atur_Mitzchek.mid
+
+# -------- Phase B: results --------------------------------------------------
+# All result sections are optional. Omit a section to skip that stage.
+
+fad:
+  real_dir: ../benchmark_output/fad_real/
+  use_pretrained: true
+  sr: 22050
+  style_inputs:
+    - style_name: "Slakh rock"
+      version_id: 0
+      real_dir: ../benchmark_output/fad_real/
+      generated_dir: ../benchmark_output/fad_generated/
+      # version_manifest_csv: ../data/dataset_manifest.csv   # optional
+    - style_name: "Israeli"
+      version_id: 1
+      real_dir: ../benchmark_output/fad_real/
+      generated_dir: ../benchmark_output/fad_generated/
+
+f1:
+  # basic_pitch_python: ../basic_pitch_env/Scripts/python.exe   # optional
+  onset_tolerance_s: 0.05
+  benchmark_pairs:
+    - name: AuSep_1_tpt_33_Elise
+      style_name: Israeli
+      generated_wav: ../benchmark_output/AuSep_1_tpt_33_Elise/generated.wav
+      reference_midi: ../benchmark_output/AuSep_1_tpt_33_Elise/reference.mid
+
+latency:
+  # timing_json maps a label -> the timing_info dict from
+  # infer_mel(return_timing=True). Produce it once per inference run and
+  # save it to JSON, then point this section at it.
+  timing_json: ../benchmark_output/timing_infos.json
+  sample_rate: 22050
+  hop_length: 256
+  segment_duration: 5.0
+
+transfer:
+  title: "Israeli v1 — qualitative examples"
+  items:
+    - name: AuSep_1_tpt_33_Elise
+      style_name: Israeli
+      input_mel_png: ../benchmark_output/AuSep_1_tpt_33_Elise/input_mel.png
+      generated_mel_png: ../benchmark_output/AuSep_1_tpt_33_Elise/generated_mel.png
+      input_wav: ../benchmark_output/AuSep_1_tpt_33_Elise/input.wav
+      generated_wav: ../benchmark_output/AuSep_1_tpt_33_Elise/generated.wav
+      scores: { f1: 0.31, fad: 12.4 }

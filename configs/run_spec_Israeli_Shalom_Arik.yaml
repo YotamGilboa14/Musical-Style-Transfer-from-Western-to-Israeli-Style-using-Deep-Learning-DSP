@@ -1,0 +1,50 @@
+# TEMPLATE — fill `steps:` (after training) and `songs:` (HELD-OUT ONLY) before running:
+#   python -m postprocessing.run_inference_batch --spec configs/run_spec_Israeli_Shalom_Arik.yaml
+#
+# Cross-product is: songs × steps × target_styles × roles.
+# Output stem convention: {song}__step_{N}__style_{target}__role_{role}
+# Outputs land under output_root/<run_id>/{audio,mels,midi,metrics}/ + run_spec.copy.yaml + _summary.csv,
+# and one row per output is appended to <output_root>/_index.csv.
+
+run_id: Israeli_Shalom_Arik_step_search_FILLDATE   # e.g. Israeli_Shalom_Arik_step_search_20260301
+version_id: 1
+target_style: Israeli
+style_version_id: 1                       # which trained style embedding to condition on
+
+output_root: G:/My Drive/MusicProject/versions/Israeli_Shalom_Arik/inference_runs
+checkpoint_template: G:/My Drive/MusicProject/versions/Israeli_Shalom_Arik/checkpoints/step_{step}.pt
+
+# Candidate training steps to evaluate. Pick 6–10 around the validation-loss plateau.
+steps: []   # e.g. [40000, 50000, 60000, 70000, 80000]
+
+# Held-out songs only. These must be excluded from training in split_dataset.
+songs: []
+# songs:
+#   - name: Erev_Shel_Shoshanim
+#     midi: G:/My Drive/MusicProject/source_pool/<artist>/<album>/Erev_Shel_Shoshanim/Erev_Shel_Shoshanim.mid
+#     duration: 30.0          # seconds; null = full song
+#   - name: Hava_Nagila
+#     midi: G:/My Drive/MusicProject/source_pool/<artist>/<album>/Hava_Nagila/Hava_Nagila.mid
+#     duration: 30.0
+
+# Output role(s) to render. For the step-selection sweep we only need "transferred".
+roles: [transferred]
+
+# Sampling hyperparameters — frozen across the sweep so step is the only varying axis.
+sampling:
+  ddim_steps: 100
+  cfg_score: 1.25
+  cfg_version: 1.25
+  mel_min: -80.0
+  mel_max: 0.0
+
+# Metrics computed by run_inference_batch + the downstream f1_eval --run-dir call.
+metrics:
+  f1:
+    enable: true               # local-only: needs basic_pitch_env
+    onset_tolerance_s: 0.05
+  fad:
+    enable: true
+    real_dir: G:/My Drive/MusicProject/versions/Israeli_Shalom_Arik/fad_real   # held-out real audio embeddings source
+  latency:
+    enable: true
