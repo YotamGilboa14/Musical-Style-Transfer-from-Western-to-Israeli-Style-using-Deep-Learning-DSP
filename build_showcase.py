@@ -323,7 +323,8 @@ def _copy_audio(src: Path, dest: Path, lite: bool = False,
         return _copy(src, dest)
 
 
-def _copy_audio_pipeline_fidelity(src: Path, dest: Path) -> Optional[Path]:
+def _copy_audio_pipeline_fidelity(src: Path, dest: Path,
+                                  seconds: Optional[float] = None) -> Optional[Path]:
     """Copy an ``original`` A/B clip at the pipeline's fidelity ceiling.
 
     The model only ever sees 22.05 kHz mono mels, so its output is bounded to
@@ -331,7 +332,8 @@ def _copy_audio_pipeline_fidelity(src: Path, dest: Path) -> Optional[Path]:
     file makes the original-vs-transferred comparison unfair (it sounds better
     for reasons the model can never match). We therefore down-convert the
     original to the same 22.05 kHz mono the preprocessing uses, so the only
-    audible difference is the style, not the audio quality.
+    audible difference is the style, not the audio quality. When ``seconds`` is
+    given we also trim to that length (keeps the bundle small).
     """
     if not src or not src.exists() or not src.is_file():
         return _copy(src, dest)
@@ -339,7 +341,8 @@ def _copy_audio_pipeline_fidelity(src: Path, dest: Path) -> Optional[Path]:
         import librosa
         import numpy as np
         import soundfile as sf
-        y, _ = librosa.load(str(src), sr=MEL_SR, mono=True)
+        y, _ = librosa.load(str(src), sr=MEL_SR, mono=True,
+                            duration=seconds if seconds else None)
         dest.parent.mkdir(parents=True, exist_ok=True)
         sf.write(str(dest), np.asarray(y, dtype="float32"), MEL_SR)
         return dest
@@ -966,9 +969,10 @@ def build_preprocessing(cfg: dict, drive: dict, out_root: Path,
         dest = stage_dir / name
         media: List[str] = []
 
-        # original audio
-        orig = _copy_audio(song_src / "original.wav", dest / "original.wav",
-                           lite=lite, seconds=seconds)
+        # original audio (at pipeline fidelity: 22.05 kHz mono, trimmed)
+        orig = _copy_audio_pipeline_fidelity(song_src / "original.wav",
+                                             dest / "original.wav",
+                                             seconds=seconds)
         if orig:
             rel = _rel(orig, out_root)
             media.append(_audio(rel, "original audio"))
