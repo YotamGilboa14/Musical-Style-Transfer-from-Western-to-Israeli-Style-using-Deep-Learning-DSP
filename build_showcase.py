@@ -874,19 +874,33 @@ def _page_head(title: str) -> str:
 
 
 def _mermaid(diagram: str) -> str:
-    """Return the live Mermaid diagram block, plus SVG/PNG download links if exported."""
-    live = f'<div class="diagram"><pre class="mermaid">\n{diagram}\n</pre></div>'
+    """Return a rendered block diagram.
+
+    We embed the pre-rendered **static SVG** (falling back to PNG) that the build
+    exports via mermaid.ink. A static image renders everywhere - inside a zip,
+    over file://, in an email preview, in any browser, with no JavaScript - which
+    live client-side Mermaid does not. Live Mermaid is kept only as a last-resort
+    fallback for the rare case the export was unavailable (fully offline build).
+    """
     exp = _DIAGRAM_EXPORTS.get(diagram)
+    links = []
     if exp:
-        links = []
         if exp.get("svg"):
             links.append(f'<a href="{_esc(exp["svg"])}" download>SVG (vector)</a>')
         if exp.get("png"):
             links.append(f'<a href="{_esc(exp["png"])}" download>PNG</a>')
-        if links:
-            live += ('<p class="dl">Download this diagram for the poster / book / '
-                     'slides: ' + ' &middot; '.join(links) + '</p>')
-    return live
+    dl = ('<p class="dl">Download this diagram for the poster / book / slides: '
+          + ' &middot; '.join(links) + '</p>') if links else ""
+
+    img_src = (exp.get("svg") or exp.get("png")) if exp else None
+    if img_src:
+        return ('<div class="diagram">'
+                f'<img class="diagram-img" src="{_esc(img_src)}" '
+                'alt="block diagram" loading="lazy" '
+                'style="max-width:100%;height:auto;display:block;margin:0 auto;">'
+                '</div>' + dl)
+    # Fallback: live Mermaid (only if the SVG/PNG export was unavailable).
+    return f'<div class="diagram"><pre class="mermaid">\n{diagram}\n</pre></div>' + dl
 
 
 def _audio(rel: str, label: str) -> str:
