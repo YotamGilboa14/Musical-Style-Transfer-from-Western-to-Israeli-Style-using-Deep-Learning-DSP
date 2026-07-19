@@ -323,6 +323,31 @@ def _copy_audio(src: Path, dest: Path, lite: bool = False,
         return _copy(src, dest)
 
 
+def _copy_audio_pipeline_fidelity(src: Path, dest: Path) -> Optional[Path]:
+    """Copy an ``original`` A/B clip at the pipeline's fidelity ceiling.
+
+    The model only ever sees 22.05 kHz mono mels, so its output is bounded to
+    that fidelity. Presenting the source song as a pristine 44.1 kHz stereo
+    file makes the original-vs-transferred comparison unfair (it sounds better
+    for reasons the model can never match). We therefore down-convert the
+    original to the same 22.05 kHz mono the preprocessing uses, so the only
+    audible difference is the style, not the audio quality.
+    """
+    if not src or not src.exists() or not src.is_file():
+        return _copy(src, dest)
+    try:
+        import librosa
+        import numpy as np
+        import soundfile as sf
+        y, _ = librosa.load(str(src), sr=MEL_SR, mono=True)
+        dest.parent.mkdir(parents=True, exist_ok=True)
+        sf.write(str(dest), np.asarray(y, dtype="float32"), MEL_SR)
+        return dest
+    except Exception as e:
+        print(f"    [fidelity] resample failed on {src.name} ({e}); copying full")
+        return _copy(src, dest)
+
+
 def _rel(path: Path, root: Path) -> str:
     """POSIX relative path of ``path`` under ``root`` (for portable href/src)."""
     return path.relative_to(root).as_posix()
@@ -1673,10 +1698,12 @@ def build_inference(cfg: dict, out_root: Path, assets_root: Path,
 
         orig_block = ""
         for r in buckets["original"]:
-            copied = _copy(curated_dir / r["rel_path"], dest / "original.wav")
+            copied = _copy_audio_pipeline_fidelity(
+                curated_dir / r["rel_path"], dest / "original.wav")
             if copied:
                 rel = _rel(copied, out_root)
-                orig_block = ('<div class="card"><h4>Original (source song)</h4>'
+                orig_block = ('<div class="card"><h4>Original (source song, '
+                              '22.05 kHz mono)</h4>'
                               + _audio(rel, "original \u00b7 " + r["window"]) + "</div>")
                 man.add(stage="04_inference_results", rel_path=rel, kind="audio",
                         title=f"{song} - original", caption="A/B reference",
@@ -1722,7 +1749,10 @@ def build_inference(cfg: dict, out_root: Path, assets_root: Path,
         'listen to the original and then the same short window re-rendered in each '
         'learned style. The notes stay fixed while the model repaints the sound. '
         'Every clip is the exact segment we picked by ear for the clearest '
-        'comparison.</p>'
+        'comparison. The original is presented at the same 22.05 kHz mono the '
+        'preprocessing uses &mdash; the fidelity ceiling the model works within '
+        '&mdash; so the only audible difference you judge is the style, not the '
+        'recording quality.</p>'
         + "".join(cards)
         + "</section>")
 

@@ -137,7 +137,9 @@ def _plot_3d(coords: Dict[str, np.ndarray], explained, out_png: Path) -> None:
     leg = ax.legend(loc="upper left", fontsize=9, framealpha=0.92)
     for h in leg.legend_handles:
         h.set_alpha(1.0)
-    ax.view_init(elev=18, azim=35)
+    # Look roughly along PC2 so PC1 (the axis that carries the real-vs-generated
+    # separation, ~38% of variance) runs left-to-right and faces the viewer.
+    ax.view_init(elev=12, azim=-72)
     fig.tight_layout()
     out_png.parent.mkdir(parents=True, exist_ok=True)
     fig.savefig(out_png, dpi=170)
